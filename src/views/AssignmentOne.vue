@@ -23,7 +23,7 @@
 <script>
 import BarChart from '../components/BarChart.vue';
 import StackedBarChart from '../components/StackedBarChart.vue';
-import HeatMap from '../components/heatmap.vue';
+import HeatMap from '../components/HeatMap.vue';
 export default {
   name: 'AssignmentOne',
   components: {

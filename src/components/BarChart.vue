@@ -1,4 +1,9 @@
 <template>
+  <div class="bg-white px-6 lg:px-8 text-center mt-8">
+    <div class="mx-auto max-w-5xl">
+      <h3 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl">
+        Bar Chart
+    </h3>
     <div>
         <label for="citySelect">Select City:</label>
         <select id="citySelect">
@@ -9,6 +14,8 @@
         <!-- Bar chart container -->
         <div id="barchart-container"></div>
     </div>
+  </div>
+</div>
 </template>
 
 <script>
@@ -18,14 +25,14 @@ export default {
     name: 'BarChart',
     mounted() {
         // Bar Chart
-        const margin = { top: 10, right: 100, bottom: 50, left: 100 };
-        const width = 800 - margin.left - margin.right;
+        const margin = { top: 10, right: 50, bottom: 50, left: 150 };
+        const width = 900 - margin.left - margin.right;
         const height = 600 - margin.top - margin.bottom;
 
         // Create SVG element for Bar Chart
         const svg = d3.select('#barchart-container')
             .append('svg')
-            .attr('width', width + margin.left + margin.right)
+            .attr('width', width )
             .attr('height', height + margin.top + margin.bottom)
             .append('g')
             .attr('transform', `translate(${margin.left},${margin.top})`);
@@ -74,7 +81,7 @@ export default {
           tooltip
             .html(`Tree Type: ${treeType}<br>Total Amount: ${totalAmount}<br>Canopy mean_h: ${averageHeight}`)
             .style('opacity', 1);
-          d3.select(this).attr('fill', '#0e6efc');
+          d3.select(this).attr('fill', '#2222bb');
         }
 
         function mousemove() {
@@ -85,13 +92,10 @@ export default {
 
         function mouseleave() {
           tooltip.style('opacity', 0);
-          d3.select(this).attr('fill', (d) => scolor(d.count));
+          d3.select(this).attr('fill', 'steelblue');
         }
 
-        const scolor = d3.scaleSequential()
-          .domain([0, d3.max(data, d => d.count)])
-          .interpolator(d3.interpolateGreens);
-
+      
         svg.selectAll('*').remove();
 
         svg

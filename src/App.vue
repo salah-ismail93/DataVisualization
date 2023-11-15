@@ -17,7 +17,7 @@ export default {
 
 <style scoped>
 .mr-20{
-      margin-right: 20rem;
+      margin-right: 10rem;
 
 }
 </style>

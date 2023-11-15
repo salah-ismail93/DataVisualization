@@ -4,6 +4,8 @@
             <div class="flex lg:flex-1">
                 <router-link to="/">Husam Jenidi and Salah Ismail</router-link>
             </div>
+
+             <!-- side bar-->
             <div class="flex lg:hidden">
                 <button type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700">
                     <span class="sr-only">Open main menu</span>
@@ -16,31 +18,17 @@
             </div>
             <div class="hidden lg:flex lg:gap-x-12">
                 <router-link class="text-sm font-semibold leading-6 text-gray-900" to="/AssignmentOne">Assignment 1</router-link>
-            </div>
-            <div class="hidden lg:flex lg:gap-x-12">
                 <router-link class="text-sm font-semibold leading-6 text-gray-900" to="/AssignmentTwo">Assignment 2</router-link>
-            </div>
-            <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-                <a href="https://github.com/salah-ismail93/Datavisualization" target="_blank"
-                    class="text-sm font-semibold leading-6 text-gray-900">
-                    Github
-                    <span aria-hidden="true">&rarr;</span>
-                </a>
-            </div>
-            <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-                <a href="https://colab.research.google.com/drive/1vY9JxPZKnyzf3IUrQeLZjeftFMdwIrE-#scrollTo=yqYbJfV08k4V" target="_blank"
-                    class="text-sm font-semibold leading-6 text-gray-900">
-                    Data processing and manipulation
-                    <span aria-hidden="true">&rarr;</span>
-                </a>
+                <a href="https://github.com/salah-ismail93/Datavisualization" target="_blank" class="text-sm font-semibold leading-6 text-gray-900"> Github <span aria-hidden="true">&rarr;</span></a>
+                <a href="https://colab.research.google.com/drive/1vY9JxPZKnyzf3IUrQeLZjeftFMdwIrE-#scrollTo=yqYbJfV08k4V" target="_blank" class="text-sm font-semibold leading-6 text-gray-900">Data processing and manipulation<span aria-hidden="true">&rarr;</span></a>
             </div>
         </nav>
         <!-- Mobile menu, show/hide based on menu open state. -->
-        <div class="lg:hidden" role="dialog" aria-modal="true">
+        <div class="lg:hidden" v-if="isSidebarOpen" role="dialog" aria-modal="true">
             <div
                 class="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
                 <div class="flex items-center justify-between">
-                    <button type="button" class="-m-2.5 rounded-md p-2.5 text-gray-700">
+                    <button type="button" class="-m-2.5 rounded-md p-2.5 text-gray-700" @click="toggleSidebar">
                         <span class="sr-only">Close menu</span>
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                             aria-hidden="true">
@@ -74,7 +62,18 @@
 <script>
 export default {
     name: 'HeaderComponent',
+    data() {
+        return {
+            isSidebarOpen: false,  // Tracks the state of the sidebar
+        };
+    },
+    methods: {
+        toggleSidebar() {
+            this.isSidebarOpen = !this.isSidebarOpen;  // Toggles the state of the sidebar
+        },
+    },
 }
+
 </script>
 
 <style scoped>

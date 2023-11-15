@@ -10,7 +10,7 @@
       <label for="stateSelectStacked">Select State:</label>
       <select id="stateSelectStacked"></select>
     </div>
-    <div class="flex justify-center py-3" id="A1chart3">
+    <div class="flex justify-center py-3 hidden" id="A1chart3">
       <div class="tooltip A1chart3Inner"></div>
       <div id="stacked-bar-chart-container"></div>
     </div>

@@ -24,7 +24,7 @@ export default {
     mounted() {
 
         // Heatmap
-        const heatmapMargin = { top: 10, right: 10, bottom: 30, left: 40 };
+        const heatmapMargin = { top: 10, right: 10, bottom: 30, left: 150 };
         const heatmapWidth = 800 - heatmapMargin.left - heatmapMargin.right;
         const heatmapHeight = 400 - heatmapMargin.top - heatmapMargin.bottom;
 
@@ -79,9 +79,6 @@ export default {
 
         });
 
-
-
-
         function drawHeatmap(data) {
             const cities = Array.from(new Set(data.map((d) => d.city))).slice(0, 5); // Limit to the first 5 cities
             const treeTypes = Array.from(new Set(data.map((d) => d.common_name))).slice(0, 5); // Limit to the first 5 tree types
@@ -89,7 +86,7 @@ export default {
             const xScale = d3.scaleBand().domain(cities).range([0, heatmapWidth]);
             const yScale = d3.scaleBand().domain(treeTypes).range([0, heatmapHeight]);
 
-            const colorScale = d3.scaleSequential(d3.interpolateBlues).domain([0, d3.max(data, (d) => +d.count)]);
+            const colorScale = d3.scaleSequential(d3.interpolateGreens).domain([1, d3.max(data, (d) => +d.count)]);
 
             const tooltip = d3.select("#A1chart2")
                 .append("div")
@@ -102,7 +99,7 @@ export default {
                 tooltip
                     .html(`Tree Type: ${treeType}<br>Total Amount: ${totalAmount}<br>Canopy mean_h: ${averageHeight}`)
                     .style('opacity', 1);
-                d3.select(this).attr('fill', '#0e6efc');
+                d3.select(this).attr('fill', '#0255ee');
             }
 
             function mousemove() {
@@ -113,12 +110,10 @@ export default {
 
             function mouseleave() {
                 tooltip.style('opacity', 0);
-                d3.select(this).attr('fill', (d) => scolor(d.count));
+                d3.select(this).attr('fill', (d) => colorScale(+d.count));
             }
 
-            const scolor = d3.scaleSequential()
-                .domain([0, d3.max(data, d => d.count)])
-                .interpolator(d3.interpolateGreens);
+
 
             heatmapSvg.selectAll('*').remove();
 
@@ -138,10 +133,85 @@ export default {
 
             heatmapSvg.append('g').call(d3.axisBottom(xScale)).attr('transform', `translate(0,${heatmapHeight})`);
             heatmapSvg.append('g').call(d3.axisLeft(yScale));
-        }
+        
+        const legendWidth = 300, legendHeight = 20;
+
+    // Append a defs (for definition) element to your SVG
+const defs = heatmapSvg.append('defs');
+
+// Append a linearGradient element to the defs and give it a unique id
+const linearGradient = defs.append('linearGradient').attr('id', 'linear-gradient');
+
+// Horizontal gradient
+linearGradient
+    .attr("x1", "0%")
+    .attr("y1", "0%")
+    .attr("x2", "100%")
+    .attr("y2", "0%");
+
+// Set the color for the start (0%)
+linearGradient.append("stop") 
+    .attr("offset", "0%")   
+    .attr("stop-color", d3.interpolateGreens(0)); 
+
+// Set the color for the end (100%)
+linearGradient.append("stop") 
+    .attr("offset", "100%")   
+    .attr("stop-color", d3.interpolateGreens(1));
+
+// Draw the rectangle and fill with gradient
+heatmapSvg.append("rect")
+    .attr("width", legendWidth)
+    .attr("height", legendHeight)
+    .style("fill", "url(#linear-gradient)")
+    .attr("transform", `translate(${heatmapWidth - legendWidth}, ${heatmapHeight + 40})`);
+
+// Create scale for legend axis
+const legendScale = d3.scaleLinear()
+    .domain([1, d3.max(data, (d) => +d.count)])
+    .range([0, legendWidth]);
+
+// Create legend axis
+const legendAxis = d3.axisBottom(legendScale).ticks(5);
+heatmapSvg.append("g")
+    .attr("transform", `translate(${heatmapWidth - legendWidth}, ${heatmapHeight + 60})`)
+    .call(legendAxis);
 
     }
 }
+}
+
 </script>
 
-<style></style>
+
+<style>
+.tooltip {
+    opacity: 0;
+    background-color: white;
+    border: solid;
+    border-width: 2px;
+    border-radius: 5px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1080;
+    display: block;
+    margin: 0;
+    font-family: var(--bs-font-sans-serif);
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: left;
+    text-align: start;
+    text-decoration: none;
+    text-shadow: none;
+    text-transform: none;
+    letter-spacing: normal;
+    word-break: normal;
+    word-spacing: normal;
+    white-space: normal;
+    line-break: auto;
+    font-size: .875rem;
+    word-wrap: break-word;
+    opacity: 0;
+}
+</style>
