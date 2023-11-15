@@ -17,10 +17,20 @@
             <div class="hidden lg:flex lg:gap-x-12">
                 <router-link class="text-sm font-semibold leading-6 text-gray-900" to="/AssignmentOne">Assignment 1</router-link>
             </div>
+            <div class="hidden lg:flex lg:gap-x-12">
+                <router-link class="text-sm font-semibold leading-6 text-gray-900" to="/AssignmentTwo">Assignment 2</router-link>
+            </div>
             <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-                <a href="https://github.com/Husam-Jenidi/Datavisualization" target="_blank"
+                <a href="https://github.com/salah-ismail93/Datavisualization" target="_blank"
                     class="text-sm font-semibold leading-6 text-gray-900">
                     Github
+                    <span aria-hidden="true">&rarr;</span>
+                </a>
+            </div>
+            <div class="hidden lg:flex lg:flex-1 lg:justify-end">
+                <a href="https://colab.research.google.com/drive/1vY9JxPZKnyzf3IUrQeLZjeftFMdwIrE-#scrollTo=yqYbJfV08k4V" target="_blank"
+                    class="text-sm font-semibold leading-6 text-gray-900">
+                    Data processing and manipulation
                     <span aria-hidden="true">&rarr;</span>
                 </a>
             </div>
@@ -43,9 +53,16 @@
                         <div class="space-y-2 py-6">
                             <router-link class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50" to="/AssignmentOne">Assignment 1</router-link>
                         </div>
+                        <div class="space-y-2 py-6">
+                            <router-link class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50" to="/AssignmentTwo">Assignment 2</router-link>
+                        </div>
                         <div class="py-6">
-                            <a href="https://github.com/Husam-Jenidi/Datavisualization"
+                            <a href="https://github.com/salah-ismail93/Datavisualization"
                                 class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Github</a>
+                        </div>
+                        <div class="py-6">
+                            <a href="https://colab.research.google.com/drive/1vY9JxPZKnyzf3IUrQeLZjeftFMdwIrE-#scrollTo=yqYbJfV08k4V"
+                                class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Data processing and manipulation</a>
                         </div>
                     </div>
                 </div>
