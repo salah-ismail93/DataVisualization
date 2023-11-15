@@ -1,5 +1,5 @@
 <template>
-    <div></div>
+    <div>StackedBarChart</div>
 </template>
 
 <script>

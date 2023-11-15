@@ -1,5 +1,4 @@
 <template>
-    
   <!-- Bar Chart -->
   <div class="bg-white px-6 lg:px-8 py-22">
     <div class="mx-auto max-w-5xl text-center">
@@ -7,64 +6,33 @@
     </div>
     <div class="mx-auto max-w-5xl">
       <div class="bg-white px-6 lg:px-8 text-center">
-    <div class="mx-auto max-w-5xl">
-      <p class="mx-auto mt-6 max-w-2xl text-base leading-8 text-gray-600 text-center">
-      A new dataset containing information on 5.6 million trees from 63 major US cities has been compiled, including details on location, species, nativity, health, and more. 
-      </p>
-      <p class="mt-4 text-base leading-7 text-indigo-600 sm:text-2xl">Abundance of Trees</p>
-    </div></div></div>
-      <div>
-      <div style="text-align: center;">
-        <label for="citySelect">Select City:</label>
-        <select id="citySelect"></select>
-      </div>
-      <div class="flex justify-center py-3 hidden" id="A1chart1">
-        <div class="tooltip A1chart1Inner"></div>
-        <!-- Bar chart container -->
-        <div id="barchart-container"></div>
+        <div class="mx-auto max-w-5xl">
+          <p class="mx-auto mt-6 max-w-2xl text-base leading-8 text-gray-600 text-center">
+            A new dataset containing information on 5.6 million trees from 63 major US cities has been compiled, including
+            details on location, species, nativity, health, and more.
+          </p>
+          <p class="mt-4 text-base leading-7 text-indigo-600 sm:text-2xl">Abundance of Trees</p>
+        </div>
       </div>
     </div>
+    <BarChart/>
+    <StackedBarChart/>
+    <HeatMap/>
   </div>
-
-  <!-- Heatmap -->
-  <div class="bg-white px-6 lg:px-8 text-center">
-    <div class="mx-auto max-w-5xl">
-      <p class="mt-4 text-base leading-7 text-indigo-600 sm:text-2xl">Heatmap according to states</p>
-      <div>
-        <label for="stateSelect">Select State:</label>
-        <select id="stateSelect"></select>
-      </div>
-      <div class="flex justify-center py-3 hidden" id="A1chart2">
-        <div class="tooltip A1chart2Inner"></div>
-        <!-- Heatmap container -->
-        <div id="heatmap-container"></div>
-      </div>
-    </div>
-  </div>
-   <!-- Stacked Bar Chart -->
-<div class="bg-white px-6 lg:px-8 text-center mt-8">
-  <div class="mx-auto max-w-5xl">
-    <h3 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl">
-      Stacked Bar Chart
-    </h3>
-    
-    <div>
-      <label for="stateSelectStacked">Select State:</label>
-      <select id="stateSelectStacked"></select>
-    </div>
-    <div class="flex justify-center py-3" id="A1chart3">
-      <div class="tooltip A1chart3Inner"></div>
-      <div id="stacked-bar-chart-container"></div>
-    </div>
-  </div>
-</div>
 </template>
 <script>
 import * as d3 from 'd3';
-
+import BarChart from '../components/BarChart.vue';
+import StackedBarChart from '../components/StackedBarChart.vue';
+import HeatMap from '../components/Heatmap.vue';
 export default {
   name: 'AssignmentOne',
-  mounted() {
+  components: {
+    BarChart,
+    StackedBarChart,
+    HeatMap,
+  },
+  /*mounted() {
     // Bar Chart
     const margin = { top: 10, right: 100, bottom: 50, left: 100 };
     const width = 800 - margin.left - margin.right;
@@ -204,7 +172,7 @@ export default {
         drawStackedBarChart(stackedData);
         document.getElementById('A1chart3').classList.remove('hidden');
       });
-      
+
       function drawStackedBarChart(data) {
         const x = d3.scaleLinear().domain([0, d3.max(data, (d) => +d.count)]).range([0, stackedWidth]);
         const y = d3
@@ -220,25 +188,25 @@ export default {
         stackedSvg.selectAll('*').remove();
 
         stackedSvg
-    .append('g')
-    .selectAll('rect')
-    .data(data)
-    .enter()
-    .append('rect')
-    .attr('x', 0)
-    .attr('y', (d) => y(d.treeType))
-    .attr('width', (d) => x(d.count))
-    .attr('height', y.bandwidth())
-    .attr('fill', (d) => colorScale(d.treeType));
+          .append('g')
+          .selectAll('rect')
+          .data(data)
+          .enter()
+          .append('rect')
+          .attr('x', 0)
+          .attr('y', (d) => y(d.treeType))
+          .attr('width', (d) => x(d.count))
+          .attr('height', y.bandwidth())
+          .attr('fill', (d) => colorScale(d.treeType));
 
- // Update Y axis
- stackedSvg.append('g')
-    .call(d3.axisLeft(y))
-    .selectAll("text")
-    .style("text-anchor", "end")
-    .attr("dx", "-0.5em")
-    .attr("dy", "0.5em")
-    .attr("transform", "rotate(-45)");
+        // Update Y axis
+        stackedSvg.append('g')
+          .call(d3.axisLeft(y))
+          .selectAll("text")
+          .style("text-anchor", "end")
+          .attr("dx", "-0.5em")
+          .attr("dy", "0.5em")
+          .attr("transform", "rotate(-45)");
 
         stackedSvg.append('g').call(d3.axisLeft(y));
       }
@@ -374,12 +342,12 @@ export default {
         heatmapSvg.append('g').call(d3.axisLeft(yScale));
       }
     });
-  },
+  },*/
 };
 </script>
 
 <style>
-.tooltip {
+/*.tooltip {
   opacity: 0;
   background-color: white;
   border: solid;
@@ -406,5 +374,5 @@ export default {
   line-break: auto;
   font-size: 0.875rem;
   word-wrap: break-word;
-}
+}*/
 </style>
