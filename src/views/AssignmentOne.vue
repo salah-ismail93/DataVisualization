@@ -18,18 +18,22 @@
     <BarChart />
     <StackedBarChart />
     <HeatMap />
+    <WaffleChart />
+    
   </div>
 </template>
 <script>
 import BarChart from '../components/BarChart.vue';
 import StackedBarChart from '../components/StackedBarChart.vue';
 import HeatMap from '../components/HeatMap.vue';
+import WaffleChart from '../components/WaffleChart.vue';
 export default {
   name: 'AssignmentOne',
   components: {
     BarChart,
     StackedBarChart,
     HeatMap,
+    WaffleChart,
   },
   mounted() {
 
