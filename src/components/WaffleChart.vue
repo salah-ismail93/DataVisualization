@@ -33,7 +33,7 @@
     },
     mounted() {
       // Load your data here
-      d3.csv('/path/to/your/data.csv').then((loadedData) => {
+      d3.csv('/species.csv').then((loadedData) => {
         this.data = loadedData;
         this.states = Array.from(new Set(this.data.map(d => d.state)));
         this.selectedState = this.states[0];
