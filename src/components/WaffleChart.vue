@@ -1,110 +1,104 @@
 <template>
-    <div class="bg-white px-6 lg:px-8 text-center mt-8">
-      <div class="mx-auto max-w-5xl">
-        <h3 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl">
-          Waffle Chart
-        </h3>
-    <div class="waffle-chart-container">
-      <div>
-        <label for="WaffleStateSelect">Select State:</label>
-        <select id="WaffleStateSelect" @change="updateChart">
-          <option v-for="state in states" :key="state" :value="state">{{ state }}</option>
-        </select>
+  <div class="bg-white px-6 lg:px-8 text-center mt-8">
+    <div class="mx-auto max-w-5xl">
+      <h3 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl">
+        Waffle Chart
+      </h3>
+      <div class="waffle-chart-container">
+        <div>
+          <label for="WaffleStateSelect">Select State:</label>
+          <select id="WaffleStateSelect" @change="updateChart">
+            <option v-for="state in states" :key="state" :value="state">{{ state }}</option>
+          </select>
+        </div>
+        <div id="waffle-chart">
+          <canvas id="waffle-canvas" width="800" height="600"></canvas>
+        </div>
+        <!-- Legend can be added here -->
       </div>
-      <div id="waffle-chart"></div>
-      <!-- Legend can be added here -->
     </div>
-      </div>
-    </div>
-  </template>
-  
-  <script>
-  import * as d3 from 'd3';
-  
-  export default {
-    name: 'WaffleChart',
-    data() {
-      return {
-        states: [], // Array to hold states
-        selectedState: '', // Selected state
-        data: [], // Your data
-        chartSize: 20 // Size of the waffle chart (can be adjusted)
-      };
-    },
-    mounted() {
-      // Load your data here
-      d3.csv('/species.csv').then((loadedData) => {
+  </div>
+</template>
+<script>
+import * as d3 from 'd3';
+
+export default {
+  name: 'WaffleChart',
+  data() {
+    return {
+      states: [],
+      selectedState: '',
+      data: [],
+      cityDetails: [],
+      canvasWidth: 800,
+      canvasHeight: 600,
+      squareSize: 10,
+      squarePadding: 2,
+    };
+  },
+  mounted() {
+    this.loadData();
+  },
+  methods: {
+    loadData() {
+      // Load the data from CSV
+      d3.csv('/top_5_trees_per_city_with_others.csv').then((loadedData) => {
         this.data = loadedData;
         this.states = Array.from(new Set(this.data.map(d => d.state)));
         this.selectedState = this.states[0];
+        this.processData();
         this.drawChart();
-        const states = Array.from(new Set(loadedData.map((d) => d.state)));
-
-        d3.select("#WaffleStateSelect")
-          .selectAll("option")
-          .data(states)
-          .enter()
-          .append("option")
-          .text((d) => d);
-
-
       });
     },
-    methods: {
-      drawChart() {
-        // Clear the existing chart
-        const chart = d3.select('#waffle-chart');
-        chart.selectAll('*').remove();
-  
-        // Filter data based on the selected state
-        const filteredData = this.data.filter(d => d.state === this.selectedState);
-  
-        // Logic to draw the waffle chart
-        // Assuming 'neighborhood' and 'treeType' are fields in your data
-        const neighborhoods = Array.from(new Set(filteredData.map(d => d.neighborhood)));
-        const treeTypes = Array.from(new Set(filteredData.map(d => d.treeType)));
-        const colorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(treeTypes);
-  
-        // Sample logic for waffle chart
-        neighborhoods.forEach((neighborhood) => {
-      const neighborhoodData = filteredData.filter(d => d.neighborhood === neighborhood);
-      const waffles = chart.append('div').classed('waffle-neighborhood', true);
+    processData() {
+      // Filter the data for the selected state
+      const filteredData = this.data.filter(d => d.state === this.selectedState);
+      // Group by city
+      this.cityDetails = d3.groups(filteredData, d => d.city);
+    },
+    drawChart() {
+      const canvas = document.getElementById('waffle-canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+      
+      // Create a color scale based on scientific_name
+      const colorScale = d3.scaleOrdinal(d3.schemeCategory10)
+        .domain(this.data.map(d => d.scientific_name));
 
-      // Adjust the width of each waffle dynamically
-      const waffleWidth = 100 / this.chartSize - 2; // Adjust '2' based on margin/padding
+      let yOffset = 0;
+      this.cityDetails.forEach(([city, trees]) => {
+        // Sort the trees by count, descending
+        trees.sort((a, b) => b.count - a.count);
 
-      neighborhoodData.forEach(d => {
-        waffles.append('div')
-          .classed('waffle', true)
-          .style('background-color', colorScale(d.treeType))
-          .style('width', waffleWidth + '%') // Set the width dynamically
-          .style('height', '20px'); // Adjust as needed
+        let x = 0;
+        let y = yOffset;
+        trees.forEach(tree => {
+          for (let i = 0; i < tree.count; i++) {
+            ctx.fillStyle = colorScale(tree.scientific_name);
+            ctx.fillRect(x * (this.squareSize + this.squarePadding), y, this.squareSize, this.squareSize);
+            x++;
+            if ((x * (this.squareSize + this.squarePadding)) >= this.canvasWidth) {
+              x = 0;
+              y += this.squareSize + this.squarePadding;
+            }
+          }
+        });
+        yOffset = y + this.squareSize + this.squarePadding; // Update yOffset for the next city
       });
-    });
-      },
-      updateChart(event) {
-        this.selectedState = event.target.value;
-        this.drawChart();
-      }
+    },
+    updateChart(event) {
+      this.selectedState = event.target.value;
+      this.processData();
+      this.drawChart();
     }
-  };
-  </script>
-  
-  <style scoped>
-  .waffle-chart-container {
-    /* Styles for your container */
   }
-  .waffle-neighborhood {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    margin-bottom: 10px;
-  }
-  .waffle {
-    margin: 1px;
-    /* Width and height are set dynamically in the script */
-  }
-  /* Additional styles */
-  </style>
-  
-  
+};
+</script>
+
+
+
+<style scoped>
+.waffle-chart-container {
+  /* Styles for your container */
+}
+</style>
