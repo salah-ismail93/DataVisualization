@@ -2,7 +2,10 @@
     <header class="bg-white">
       <nav class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
         <div class="flex lg:flex-1">
-          <router-link to="/">Husam Jenidi and Salah Ismail</router-link>
+          <div>
+          <img src="../assets/logo1.png" class="logo">
+        </div>
+          <router-link to="/"><p class="names">Husam Jenidi and Salah Ismail</p></router-link>
         </div>
         <div class="flex lg:hidden">
           <button type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700" @click="mobileMenuOpen = true">
@@ -62,5 +65,11 @@ const mobileMenuOpen = ref(false)
 </script>
 
 <style scoped>
-
+.logo{
+  width: 170px;
+  height:110px;
+}
+.names{
+  margin-top:40px;
+}
 </style>
