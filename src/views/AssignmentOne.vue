@@ -44,19 +44,23 @@
       </div>
     </div>
     <!-- Your tab content goes here -->
-    <div v-show="selectedTab === 'BarChart'">
+    <div v-show="selectedTab === 'Bar Chart'">
       <!-- Content for BarChart Tab -->
       <BarChart />
     </div>
-    <div v-show="selectedTab === 'StackedBarChart'">
+    <div v-show="selectedTab === 'Stacked Bar Chart'">
       <!-- Content for StackedBarChart Tab -->
       <StackedBarChart />
     </div>
-    <div v-show="selectedTab === 'HeatMap'">
+    <div v-show="selectedTab === 'Stacked Bar Chart Percentage'">
+      <!-- Content for StackedBarChartPercentage Tab -->
+      <StackedBarChartPercentage />
+    </div>
+    <div v-show="selectedTab === 'Heat Map'">
       <!-- Content for HeatMap Tab -->
       <HeatMap />
     </div>
-    <div v-show="selectedTab === 'WaffleChart'">
+    <div v-show="selectedTab === 'Waffle Chart'">
       <!-- Content for WaffleChart Tab -->
       <WaffleChart />
     </div>
@@ -65,6 +69,7 @@
 <script>
 import BarChart from '../components/BarChart.vue';
 import StackedBarChart from '../components/StackedBarChart.vue';
+import StackedBarChartPercentage from '../components/StackedBarChartPercentage.vue';
 import HeatMap from '../components/HeatMap.vue';
 import WaffleChart from '../components/WaffleChart.vue';
 export default {
@@ -72,16 +77,18 @@ export default {
   components: {
     BarChart,
     StackedBarChart,
+    StackedBarChartPercentage,
     HeatMap,
     WaffleChart,
   },
   data() {
     return {
       tabs: [
-        { name: 'BarChart', href: '#', current: true },
-        { name: 'StackedBarChart', href: '#', current: false },
-        { name: 'HeatMap', href: '#', current: false },
-        { name: 'WaffleChart', href: '#', current: false },
+        { name: 'Bar Chart', href: '#', current: true },
+        { name: 'Stacked Bar Chart', href: '#', current: false },
+        { name: 'Stacked Bar Chart Percentage', href: '#', current: false },
+        { name: 'Heat Map', href: '#', current: false },
+        { name: 'Waffle Chart', href: '#', current: false },
       ],
       selectedTab: 'BarChart',
     };
