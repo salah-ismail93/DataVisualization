@@ -56,6 +56,10 @@
       <!-- Content for StackedBarChartPercentage Tab -->
       <StackedBarChartPercentage />
     </div>
+    <div v-show="selectedTab === 'Stacked Bar Chart Multiples'">
+      <!-- Content for StackedBarChartMultiples Tab -->
+      <StackedBarChartMultiples />
+    </div>
     <div v-show="selectedTab === 'Heat Map'">
       <!-- Content for HeatMap Tab -->
       <HeatMap />
@@ -70,6 +74,7 @@
 import BarChart from '../components/BarChart.vue';
 import StackedBarChart from '../components/StackedBarChart.vue';
 import StackedBarChartPercentage from '../components/StackedBarChartPercentage.vue';
+import StackedBarChartMultiples from '../components/StackedBarChartMultiples.vue';
 import HeatMap from '../components/HeatMap.vue';
 import WaffleChart from '../components/WaffleChart.vue';
 export default {
@@ -78,6 +83,7 @@ export default {
     BarChart,
     StackedBarChart,
     StackedBarChartPercentage,
+    StackedBarChartMultiples,
     HeatMap,
     WaffleChart,
   },
@@ -87,6 +93,7 @@ export default {
         { name: 'Bar Chart', href: '#', current: true },
         { name: 'Stacked Bar Chart', href: '#', current: false },
         { name: 'Stacked Bar Chart Percentage', href: '#', current: false },
+        { name: 'Stacked Bar Chart Multiples', href: '#', current: false },
         { name: 'Heat Map', href: '#', current: false },
         { name: 'Waffle Chart', href: '#', current: false },
       ],
