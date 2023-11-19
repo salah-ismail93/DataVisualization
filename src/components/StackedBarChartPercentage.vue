@@ -2,7 +2,7 @@
   <div class="bg-white px-6 lg:px-8 text-center mt-8">
     <div class="mx-auto max-w-5xl">
       <h3 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl">
-        Stacked Bar Chart
+        Stacked Bar Chart Percentage
       </h3>
       <div>
         <label for="selectStateStack100">Select State:</label>
