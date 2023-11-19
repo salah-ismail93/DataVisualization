@@ -9,8 +9,8 @@
         <select id="selectStateStack100"></select>
       </div>
       <div class="flex justify-center py-3" id="A1chart4">
-        <div class="tooltip A1chart3Inner"></div>
-        <div id="chart_3_legend100"></div>
+        <div class="tooltip A1chart4Inner"></div>
+        <div id="chart_4_legend100"></div>
       </div>
     </div>
   </div>
@@ -185,9 +185,9 @@ export default {
       }
 
       // Remove existing legend before updating
-      d3.select("#chart_3_legend100 svg").remove();
+      d3.select("#chart_4_legend100 svg").remove();
 
-      var legend = d3.select("#chart_3_legend100")
+      var legend = d3.select("#chart_4_legend100")
         .append("svg")
         .attr('width', 300)
         .attr('height', 200)
