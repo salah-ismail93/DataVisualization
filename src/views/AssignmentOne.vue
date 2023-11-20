@@ -109,7 +109,7 @@ export default {
     },
   },
   mounted() {
-
+    this.selectTab(this.tabs[0])
 
   },
 };

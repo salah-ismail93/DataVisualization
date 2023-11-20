@@ -1,26 +1,8 @@
 <template>
-    <!--  About the team and project  -->
-    <div class="bg-white px-6 lg:px-8 py-32">
-        <div class="mx-auto max-w-5xl text-center">
-            <h2 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Assignment 2 - Flux (Sankey or alluvial
-                Diagram)
-            </h2>
-
-        </div>
-    </div>
-
     <!-- The charts are here -->
     <div class="bg-white px-6 lg:px-8 text-center">
         <div class="mx-auto max-w-5xl">
-            <p class="mt-4 text-base leading-7 text-indigo-600 sm:text-2xl">The relationship between states , cities and the
-                tree species by the top 10 trees</p>
-            <p class="mx-auto mt-6 max-w-2xl text-base leading-8 text-gray-600 text-center">
-                An alluvial diagram depicting the interplay between states, cities in them and the species of the top 10
-                tree types.
-            </p>
-
             <div class="flex justify-center py-3" id="alluvial-container"></div>
-
         </div>
 
     </div>
