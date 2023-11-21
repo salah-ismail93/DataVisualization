@@ -47,6 +47,21 @@ export default {
         .append('option')
         .text((d) => d);
 
+      const selectedState = "New Mexico";
+      let citiesInState = allData.filter((d) => d.state === selectedState);
+
+      if (citiesInState.length > 5) {
+        // Sort the array based on the "total" property in descending order
+        citiesInState.sort((a, b) => parseFloat(b.total) - parseFloat(a.total));
+
+        // Get the first 5 objects
+        let biggestCitiesInState = citiesInState.slice(0, 5);
+
+        drawBarChart(allData, selectedState, biggestCitiesInState);
+      } else {
+        console.log("The number of objects is not greater than 5.");
+        drawBarChart(allData, selectedState, citiesInState);
+      }
       // Add change event listener to the state selection
       selectStateStack100.on('change', function () {
         const selectedState = this.value;
