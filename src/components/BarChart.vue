@@ -38,9 +38,9 @@ export default {
   },
   mounted() {
     // Bar Chart
-    const margin = { top: 0, right: 50, bottom: 50, left: 150 };
-    const width = 1200 - margin.left - margin.right;
-    const height = 1200 - margin.top - margin.bottom;
+    const margin = { top: 0, right: 0, bottom: 100, left: 130 };
+    const width = 900 - margin.left - margin.right;
+    const height = 600 - margin.top - margin.bottom;
 
     // Create SVG element for Bar Chart
     const svg = d3.select('#A1chart1')
