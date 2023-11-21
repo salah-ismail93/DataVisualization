@@ -9,6 +9,13 @@
         <select id="citySelect">
         </select>
       </div>
+      <div>
+        <label for="typeSelect">Select type:</label>
+        <select id="typeSelect">
+          <option value="Horizontal" selected>Horizontal</option>
+          <option value="Vertical">Vertical</option>
+        </select>
+      </div>
       <div class="flex justify-center py-3" id="A1chart1">
         <div class="tooltip A1chart1Inner"></div>
         <!-- Bar chart container -->
@@ -22,11 +29,18 @@ import * as d3 from 'd3';
 
 export default {
   name: 'BarChart',
+  data() {
+    return {
+      limitedData: null,
+      maxCount: null,
+      lastType: "Horizontal",
+    };
+  },
   mounted() {
     // Bar Chart
-    const margin = { top: 10, right: 50, bottom: 50, left: 150 };
-    const width = 900 - margin.left - margin.right;
-    const height = 600 - margin.top - margin.bottom;
+    const margin = { top: 0, right: 50, bottom: 50, left: 150 };
+    const width = 1200 - margin.left - margin.right;
+    const height = 1200 - margin.top - margin.bottom;
 
     // Create SVG element for Bar Chart
     const svg = d3.select('#A1chart1')
@@ -49,13 +63,30 @@ export default {
         .text((d) => d);
 
       // Add change event listener to the city selection
-      citySelect.on('change', function () {
-        const selectedCity = this.value;
+      citySelect.on('change',  (value) => {
+        const selectedCity = value.target.value;
         const filteredData = data.filter((d) => d.city === selectedCity);
         const limitedData = filteredData.slice(0, 20);
+        this.limitedData = limitedData;
         const maxCount = d3.max(limitedData, (d) => +d.count);
+        this.maxCount = maxCount;
 
-        drawBarChart(limitedData, maxCount);
+
+        if (this.lastType == "Horizontal") {
+          drawBarChart(limitedData, maxCount);
+        } else if(this.lastType == "Vertical"){
+          drawVerticalBarChart(limitedData, maxCount);
+        }
+      });
+
+      const typeSelect = d3.select('#typeSelect');
+      typeSelect.on('change',  (value) => {
+        this.lastType = value.target.value;
+        if (this.lastType == "Horizontal") {
+          drawBarChart(this.limitedData, this.maxCount);
+        } else {
+          drawVerticalBarChart(this.limitedData, this.maxCount);
+        }
       });
     });
 
@@ -129,6 +160,73 @@ export default {
         .delay((d, i) => i * 100);
     }
 
+    function drawVerticalBarChart(data, maxCount) {
+      const x = d3
+        .scaleBand()
+        .range([0, width])
+        .domain(data.map((d) => d.scientific_name))
+        .padding(0.1)
+        .paddingOuter(0.5);
+
+      const y = d3.scaleLinear().domain([0, maxCount]).range([height, 0]);
+
+      const tooltip = d3.select("#A1chart1").append("div").attr("class", "tooltip");
+
+      function mouseover(event, d) {
+        const totalAmount = d.count;
+        const treeType = d.scientific_name;
+        const averageHeight = d.mean_h;
+        tooltip
+          .html(`Tree Type: ${treeType}<br>Total Amount: ${totalAmount}<br>Canopy mean_h: ${averageHeight}`)
+          .style('opacity', 1);
+        d3.select(this).attr('fill', '#2222bb');
+      }
+
+      function mousemove() {
+        tooltip
+          .style('left', `${event.pageX + 40}px`)
+          .style('top', `${event.pageY + 5}px`);
+      }
+
+      function mouseleave() {
+        tooltip.style('opacity', 0);
+        d3.select(this).attr('fill', 'steelblue');
+      }
+
+      svg.selectAll('*').remove();
+
+      svg
+        .append('g')
+        .attr('transform', `translate(0, ${height})`)
+        .call(d3.axisBottom(x))
+        .selectAll('text')
+        .attr('transform', 'translate(-10,0)rotate(-45)')
+        .style('text-anchor', 'end');
+
+      svg.append('g').call(d3.axisLeft(y));
+
+      const bars = svg
+        .selectAll('.bar')
+        .data(data)
+        .enter()
+        .append('rect')
+        .attr('class', 'bar')
+        .attr('x', (d) => x(d.scientific_name))
+        .attr('y', height)
+        .attr('width', x.bandwidth())
+        .attr('height', 0)
+        .attr('fill', 'steelblue')
+        .on('mouseover', mouseover)
+        .on('mousemove', mousemove)
+        .on('mouseleave', mouseleave);
+
+      bars
+        .transition()
+        .duration(800)
+        .attr('y', (d) => y(d.count))
+        .attr('height', (d) => height - y(d.count))
+        .delay((d, i) => i * 100);
+    }
   }
 
 
@@ -163,6 +261,5 @@ export default {
   line-break: auto;
   font-size: .875rem;
   word-wrap: break-word;
-  opacity: 0;
 }
 </style>
