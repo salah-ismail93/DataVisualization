@@ -12,6 +12,7 @@
                 <!-- Heatmap container -->
                 <div id="heatmap-container"></div>
             </div>
+            <div ref="legend" id="chart_2_legend"></div>
         </div>
     </div>
 </template>
@@ -79,7 +80,7 @@ export default {
 
         });
 
-        function drawHeatmap(data) {
+        let drawHeatmap = (data) => {
             const cities = Array.from(new Set(data.map((d) => d.city))).slice(0, 5); // Limit to the first 5 cities
             const treeTypes = Array.from(new Set(data.map((d) => d.common_name))).slice(0, 5); // Limit to the first 5 tree types
 
@@ -116,6 +117,8 @@ export default {
 
 
             heatmapSvg.selectAll('*').remove();
+            const chart_2_legend = d3.select('#chart_2_legend')
+            chart_2_legend.selectAll('*').remove();
 
             heatmapSvg
                 .selectAll('rect')
@@ -133,52 +136,73 @@ export default {
 
             heatmapSvg.append('g').call(d3.axisBottom(xScale)).attr('transform', `translate(0,${heatmapHeight})`);
             heatmapSvg.append('g').call(d3.axisLeft(yScale));
-        
-        const legendWidth = 300, legendHeight = 20;
 
-    // Append a defs (for definition) element to your SVG
-const defs = heatmapSvg.append('defs');
+            const legendWidth = 500, legendHeight = 20;
 
-// Append a linearGradient element to the defs and give it a unique id
-const linearGradient = defs.append('linearGradient').attr('id', 'linear-gradient');
+            // Draw the rectangle and fill with gradient
+            heatmapSvg.append("rect")
+                .attr("width", legendWidth)
+                .attr("height", legendHeight)
+                .style("fill", "url(#linear-gradient)")
+                .attr("transform", `translate(${heatmapWidth - legendWidth}, ${heatmapHeight + 40})`);
 
-// Horizontal gradient
-linearGradient
-    .attr("x1", "0%")
-    .attr("y1", "0%")
-    .attr("x2", "100%")
-    .attr("y2", "0%");
+            // Create scale for legend axis
+            const legendScale = d3.scaleLinear()
+                .domain([1, d3.max(data, (d) => +d.count)])
+                .range([0, legendWidth]);
 
-// Set the color for the start (0%)
-linearGradient.append("stop") 
-    .attr("offset", "0%")   
-    .attr("stop-color", d3.interpolateGreens(0)); 
+            // Create legend axis
+            const legendAxis = d3.axisBottom(legendScale).ticks(5);
+            heatmapSvg.append("g")
+                .attr("transform", `translate(${heatmapWidth - legendWidth}, ${heatmapHeight + 60})`)
+                .call(legendAxis);
 
-// Set the color for the end (100%)
-linearGradient.append("stop") 
-    .attr("offset", "100%")   
-    .attr("stop-color", d3.interpolateGreens(1));
+            // Set up SVG container for the legend
+            const svg = d3
+                .select(this.$refs.legend)
+                .append('svg')
+                .attr('width', 600) // adjust the width as needed
+                .attr('height', 50); // adjust the height as needed
 
-// Draw the rectangle and fill with gradient
-heatmapSvg.append("rect")
-    .attr("width", legendWidth)
-    .attr("height", legendHeight)
-    .style("fill", "url(#linear-gradient)")
-    .attr("transform", `translate(${heatmapWidth - legendWidth}, ${heatmapHeight + 40})`);
+            // Define the gradient
+            const gradient = svg
+                .append('defs')
+                .append('linearGradient')
+                .attr('id', 'gradient')
+                .attr('x1', '0%')
+                .attr('y1', '0%')
+                .attr('x2', '100%')
+                .attr('y2', '0%');
 
-// Create scale for legend axis
-const legendScale = d3.scaleLinear()
-    .domain([1, d3.max(data, (d) => +d.count)])
-    .range([0, legendWidth]);
+            // Add gradient stops
+            gradient
+                .append('stop')
+                .attr('offset', '0%')
+                .attr('stop-color', colorScale(0));
 
-// Create legend axis
-const legendAxis = d3.axisBottom(legendScale).ticks(5);
-heatmapSvg.append("g")
-    .attr("transform", `translate(${heatmapWidth - legendWidth}, ${heatmapHeight + 60})`)
-    .call(legendAxis);
+            gradient
+                .append('stop')
+                .attr('offset', '100%')
+                .attr('stop-color', colorScale(d3.max(data, (d) => +d.count)));
+
+
+            // Add a rectangle filled with the gradient
+            svg
+                .append('rect')
+                .attr('width', 500) // adjust the width as needed
+                .attr('height', 20) // adjust the height as needed
+                .style('fill', 'url(#gradient)');
+
+            // Add axis for reference
+            const axisScale = d3.scaleLinear().domain([0, d3.max(data, (d) => +d.count)]).range([0, 500]); // adjust the range as needed
+
+            const axis = d3.axisBottom(axisScale).ticks(5);
+
+            svg.append('g').attr('transform', 'translate(0, 30)').call(axis);
+        }
+
 
     }
-}
 }
 
 </script>
@@ -212,6 +236,5 @@ heatmapSvg.append("g")
     line-break: auto;
     font-size: .875rem;
     word-wrap: break-word;
-    opacity: 0;
 }
 </style>
