@@ -64,7 +64,7 @@ export default {
       const y = d3
         .scaleBand()
         .range([0, height])
-        .domain(data.map((d) => d.common_name))
+        .domain(data.map((d) => d.scientific_name))
         .padding(0.1)
         .paddingOuter(0.5);
 
@@ -74,7 +74,7 @@ export default {
 
       function mouseover(event, d) {
         const totalAmount = d.count;
-        const treeType = d.common_name;
+        const treeType = d.scientific_name;
         const averageHeight = d.mean_h;
         tooltip
           .html(`Tree Type: ${treeType}<br>Total Amount: ${totalAmount}<br>Canopy mean_h: ${averageHeight}`)
@@ -113,7 +113,7 @@ export default {
         .append('rect')
         .attr('class', 'bar')
         .attr('x', x(0))
-        .attr('y', (d) => y(d.common_name))
+        .attr('y', (d) => y(d.scientific_name))
         .attr('width', 0)
         .attr('height', y.bandwidth())
         .attr('fill', 'steelblue')

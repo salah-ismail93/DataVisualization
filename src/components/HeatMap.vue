@@ -60,19 +60,15 @@ export default {
                     (d) => d.city
                 );
                 const topCities = Array.from(aggregatedData)
-                    .sort((a, b) => b[1] - a[1])
+                    .sort((a, b) => parseFloat(b.count) - parseFloat(a.count))
                     .slice(0, 5) // Limit to the first 5 cities
                     .map((d) => d[0]);
 
-                const treeTypes = Array.from(new Set(filteredData.map((d) => d.common_name)))
-                    .sort((a, b) => {
-                        const countA = filteredData.filter((d) => d.common_name === a).reduce((sum, d) => sum + +d.count, 0);
-                        const countB = filteredData.filter((d) => d.common_name === b).reduce((sum, d) => sum + +d.count, 0);
-                        return countB - countA;
-                    })
+                const treeTypes = Array.from(new Set(filteredData.map((d) => d.scientific_name)))
+                    .sort((a, b) => parseFloat(b.count) - parseFloat(a.count))
                     .slice(0, 5); // Limit to the first 5 tree types
 
-                const heatmapData = filteredData.filter((d) => topCities.includes(d.city) && treeTypes.includes(d.common_name));
+                const heatmapData = filteredData.filter((d) => topCities.includes(d.city) && treeTypes.includes(d.scientific_name));
                 drawHeatmap(heatmapData);
                 document.getElementById('A1chart2').classList.remove('hidden');
             });
@@ -82,7 +78,7 @@ export default {
 
         let drawHeatmap = (data) => {
             const cities = Array.from(new Set(data.map((d) => d.city))).slice(0, 5); // Limit to the first 5 cities
-            const treeTypes = Array.from(new Set(data.map((d) => d.common_name))).slice(0, 5); // Limit to the first 5 tree types
+            const treeTypes = Array.from(new Set(data.map((d) => d.scientific_name))).slice(0, 5); // Limit to the first 5 tree types
 
             const xScale = d3.scaleBand().domain(cities).range([0, heatmapWidth]);
             const yScale = d3.scaleBand().domain(treeTypes).range([0, heatmapHeight]);
@@ -95,7 +91,7 @@ export default {
 
             function mouseover(event, d) {
                 const totalAmount = d.count;
-                const treeType = d.common_name;
+                const treeType = d.scientific_name;
                 const averageHeight = d.mean_h;
                 tooltip
                     .html(`Tree Type: ${treeType}<br>Total Amount: ${totalAmount}<br>Canopy mean_h: ${averageHeight}`)
@@ -126,7 +122,7 @@ export default {
                 .enter()
                 .append('rect')
                 .attr('x', (d) => xScale(d.city))
-                .attr('y', (d) => yScale(d.common_name))
+                .attr('y', (d) => yScale(d.scientific_name))
                 .attr('width', xScale.bandwidth())
                 .attr('height', yScale.bandwidth())
                 .attr('fill', (d) => colorScale(+d.count))
