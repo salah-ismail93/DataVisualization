@@ -11,8 +11,7 @@
       </div>
       <div class="flex flex-wrap justify-center py-3 flex-column hidden" id="waffle-container">
         <div class="flex flex-wrap flex-row">
-          <div class="flex-custom" v-for="(value, key, index) in cities" :key="index"
-            :id="'A1chart5-' + (index + 1)">
+          <div class="flex-custom" v-for="(value, key, index) in cities" :key="index" :id="'A1chart5-' + (index + 1)">
             <h3 class="text-left">{{ key }}</h3>
           </div>
           <div id="chart_5_legend"></div>
@@ -61,8 +60,35 @@ export default {
         .append('option')
         .text((d) => d);
 
+      document.getElementById('waffle-container').classList.add('hidden');
+      const selectedState = "New Mexico";
+      let citiesInState = data.filter((d) => d.state === selectedState);
+
+      //drawBarChartMultiple(citiesInState);
+      // Extract unique city names
+      let uniqueCities = Array.from(new Set(citiesInState.map(d => d.city)));
+
+      // Generate cities object with unique identifiers
+      this.cities = {};
+      uniqueCities.forEach((city, index) => {
+        this.cities[city] = index + 1;
+      });
+
+      // Use the generated cities object
+      // console.log(this.cities);
+
+      // Group data by city
+      let groupedData = d3.group(citiesInState, d => d.city);
+
+      // Iterate over the cities and generate the waffle charts for each one
+      setTimeout(() => {
+        document.getElementById('waffle-container').classList.remove('hidden');
+        groupedData.forEach((citiesData) => {
+          this.generateWaffleChart(this.cities, citiesData);
+        });
+      }, 500);
       // Add change event listener to the state selection
-      selectStateWaffle.on('change',  (value)=> {
+      selectStateWaffle.on('change', (value) => {
         document.getElementById('waffle-container').classList.add('hidden');
         const selectedState = value.target.value;
         let citiesInState = data.filter((d) => d.state === selectedState);
@@ -70,16 +96,16 @@ export default {
         //drawBarChartMultiple(citiesInState);
         // Extract unique city names
         let uniqueCities = Array.from(new Set(citiesInState.map(d => d.city)));
-  
+
         // Generate cities object with unique identifiers
         this.cities = {};
         uniqueCities.forEach((city, index) => {
           this.cities[city] = index + 1;
         });
-  
+
         // Use the generated cities object
         // console.log(this.cities);
-  
+
         // Group data by city
         let groupedData = d3.group(citiesInState, d => d.city);
 
@@ -212,7 +238,7 @@ export default {
           return "Tree type: " + d.name + "; \nAbundance: " + d.abundance + "; \nPercentage: " + d.units + "%" + "\nCity: " + d.neigh;
         });
 
-        this.generateLegend();
+      this.generateLegend();
     }
   }
 }

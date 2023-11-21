@@ -41,6 +41,10 @@ export default {
                 .append('option')
                 .text((d) => d);
 
+            const selectedState = "New Mexico";
+            let citiesInState = data.filter((d) => d.state === selectedState);
+
+            drawBarChartMultiple(citiesInState);
             // Add change event listener to the state selection
             selectStateMultiples.on('change', function () {
                 const selectedState = this.value;

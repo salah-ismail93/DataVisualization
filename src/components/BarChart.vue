@@ -62,6 +62,19 @@ export default {
         .append('option')
         .text((d) => d);
 
+        const selectedCity = "New York";
+        const filteredData = data.filter((d) => d.city === selectedCity);
+        const limitedData = filteredData.slice(0, 20);
+        this.limitedData = limitedData;
+        const maxCount = d3.max(limitedData, (d) => +d.count);
+        this.maxCount = maxCount;
+
+
+        if (this.lastType == "Horizontal") {
+          drawBarChart(limitedData, maxCount);
+        } else if(this.lastType == "Vertical"){
+          drawVerticalBarChart(limitedData, maxCount);
+        }
       // Add change event listener to the city selection
       citySelect.on('change',  (value) => {
         const selectedCity = value.target.value;

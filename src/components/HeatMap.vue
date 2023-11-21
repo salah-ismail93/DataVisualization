@@ -50,6 +50,25 @@ export default {
                 .append('option')
                 .text((d) => d);
 
+            const selectedState = "New York";
+            const filteredData = data.filter((d) => d.state === selectedState);
+            const aggregatedData = d3.rollup(
+                filteredData,
+                (v) => d3.sum(v, (d) => +d.count),
+                (d) => d.city
+            );
+            const topCities = Array.from(aggregatedData)
+                .sort((a, b) => parseFloat(b.count) - parseFloat(a.count))
+                .slice(0, 5) // Limit to the first 5 cities
+                .map((d) => d[0]);
+
+            const treeTypes = Array.from(new Set(filteredData.map((d) => d.scientific_name)))
+                .sort((a, b) => parseFloat(b.count) - parseFloat(a.count))
+                .slice(0, 5); // Limit to the first 5 tree types
+
+            const heatmapData = filteredData.filter((d) => topCities.includes(d.city) && treeTypes.includes(d.scientific_name));
+            drawHeatmap(heatmapData);
+            document.getElementById('A1chart2').classList.remove('hidden');
             // Add change event listener to the state selection
             stateSelect.on('change', function () {
                 const selectedState = this.value;
