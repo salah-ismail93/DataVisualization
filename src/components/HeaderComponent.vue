@@ -14,12 +14,12 @@
           </button>
         </div>
         <div class="hidden lg:flex lg:gap-x-12">
-          <router-link class="text-sm font-semibold leading-6 text-gray-900" to="/AssignmentOne">Assignment 1</router-link>
-          <router-link class="text-sm font-semibold leading-6 text-gray-900" to="/AssignmentTwo">Assignment 2</router-link>
+          <router-link class="text-sm font-semibold leading-6 text-gray-900 butt" to="/AssignmentOne">Assignment 1</router-link>
+          <router-link class="text-sm font-semibold leading-6 text-gray-900 butt" to="/AssignmentTwo">Assignment 2</router-link>
         </div>
         <div class="hidden lg:flex lg:gap-x-12 lg:flex-1 lg:justify-end">
-            <a href="https://github.com/salah-ismail93/Datavisualization" target="_blank" class="text-sm font-semibold leading-6 text-gray-900"> Github <span aria-hidden="true">&rarr;</span></a>
-            <a href="https://colab.research.google.com/drive/1vY9JxPZKnyzf3IUrQeLZjeftFMdwIrE-#scrollTo=yqYbJfV08k4V" target="_blank" class="text-sm font-semibold leading-6 text-gray-900">Colab<span aria-hidden="true">&rarr;</span></a>
+            <a href="https://github.com/salah-ismail93/Datavisualization" target="_blank" class="text-sm font-semibold leading-6 text-gray-900 butt1"> Github <span aria-hidden="true">&rarr;</span></a>
+            <a href="https://colab.research.google.com/drive/1vY9JxPZKnyzf3IUrQeLZjeftFMdwIrE-#scrollTo=yqYbJfV08k4V" target="_blank" class="text-sm font-semibold leading-6 text-gray-900 butt1">Colab<span aria-hidden="true">&rarr;</span></a>
         </div>
       </nav>
       <Dialog as="div" class="lg:hidden" @close="mobileMenuOpen = false" :open="mobileMenuOpen">
@@ -35,10 +35,10 @@
           <div class="mt-6 flow-root">
             <div class="-my-6 divide-y divide-gray-500/10">
               <div class="space-y-2 py-6">
-                  <router-link class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50" to="/AssignmentOne">Assignment 1</router-link>
+                  <router-link class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 butt" to="/AssignmentOne">Assignment 1</router-link>
               </div>
               <div class="space-y-2 py-6">
-                  <router-link class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50" to="/AssignmentTwo">Assignment 2</router-link>
+                  <router-link class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 butt" to="/AssignmentTwo">Assignment 2</router-link>
               </div>
               <div class="py-6">
                   <a href="https://github.com/salah-ismail93/Datavisualization"
@@ -71,5 +71,33 @@ const mobileMenuOpen = ref(false)
 }
 .names{
   margin-top:40px;
+}
+.butt {
+  background: crimson;
+  border: 0;
+  padding: 10px 20px;
+  
+  color: white;
+  border-radius: 20px;
+}
+.butt:hover{
+  background: rgb(95, 12, 28);
+}
+.butt:selected{
+  background: grey;
+
+}
+
+.butt1 {
+  background: coral;
+  border: 0;
+  padding: 10px 20px;
+  
+  color: white;
+  border-radius: 20px;
+}
+.butt1:hover{
+  background: rgb(116, 47, 22);
+
 }
 </style>

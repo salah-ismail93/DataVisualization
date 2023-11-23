@@ -247,9 +247,13 @@ export default {
 </script>
 
 <style>
+template{
+
+
+}
 .tooltip {
   opacity: 0;
-  background-color: white;
+  background-color: #4f4f4f;
   border: solid;
   border-width: 2px;
   border-radius: 5px;

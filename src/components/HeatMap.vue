@@ -252,4 +252,9 @@ export default {
     font-size: .875rem;
     word-wrap: break-word;
 }
+#chart_2_legend{
+
+    margin-left:30%;
+    padding-bottom:5px;
+}
 </style>
