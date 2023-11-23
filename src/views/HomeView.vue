@@ -14,5 +14,6 @@
     margin-left:100px;
     width: 100%;
     margin-bottom: 10px;
+    margin-left:10px;
 }
 </style>

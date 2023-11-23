@@ -73,9 +73,9 @@ export default {
         return {
             tabs: [
                 { name: 'Alluvial', href: '#', current: true },
-                { name: 'Chart2', href: '#', current: false },
-                { name: 'Chart3', href: '#', current: false },
-                { name: 'Chart4', href: '#', current: false },
+                { name: 'Time Series', href: '#', current: false },
+                { name: 'Maps', href: '#', current: false },
+               // { name: 'Chart4', href: '#', current: false },
             ],
             selectedTab: 'Alluvial',
         };
