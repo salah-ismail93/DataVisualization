@@ -5,7 +5,7 @@
                 Stacked Bar Chart Multiples
             </h3>
             <div>
-                <label for="selectStateMultiples">Select City:</label>
+                <label for="selectStateMultiples">Select State:</label>
                 <select id="selectStateMultiples">
                 </select>
             </div>

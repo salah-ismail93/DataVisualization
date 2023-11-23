@@ -5,7 +5,7 @@
         Waffle Chart
       </h3>
       <div>
-        <label for="selectStateWaffle">Select City:</label>
+        <label for="selectStateWaffle">Select State:</label>
         <select id="selectStateWaffle">
         </select>
       </div>
