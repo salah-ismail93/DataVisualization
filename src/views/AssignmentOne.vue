@@ -97,7 +97,7 @@ export default {
         { name: 'Heat Map', href: '#', current: false },
         { name: 'Waffle Chart', href: '#', current: false },
       ],
-      selectedTab: 'BarChart',
+      selectedTab: 'Bar Chart',
     };
   },
   methods: {
@@ -107,10 +107,6 @@ export default {
         this.selectedTab = tab.name;
       });
     },
-  },
-  mounted() {
-    this.selectTab(this.tabs[0])
-
   },
 };
 </script>

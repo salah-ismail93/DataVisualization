@@ -1,7 +1,7 @@
 <template>
     <div class="bg-white px-6 lg:px-8 py-22 main">
     <div class="mx-auto max-w-5xl text-center">
-      <h2 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-4xl">Assignment 2 - alluvial</h2>
+      <h2 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-4xl">Assignment 3 -  distributions and timelines</h2>
     </div>
     <div class="mx-auto max-w-5xl">
       <div class="bg-white px-6 lg:px-8 text-center">
@@ -42,27 +42,41 @@
             </div>
         </div>
         <!-- Your tab content goes here -->
-        <div v-show="selectedTab === 'Alluvial'">
-            <!-- Content for Alluvial Tab -->
-            <AlluvialChart />
+        <div v-show="selectedTab === 'Line Chart'">
+            <!-- Content for Line chart Tab -->
+            <LineChart />
+        </div>
+        <div v-show="selectedTab === 'Radar Chart'">
+            <!-- Content for Radar Chart Tab -->
+            <RadarChart />
+        </div>
+        <div v-show="selectedTab === 'Ridge Line'">
+            <!-- Content for Billing Tab -->
+            <RidgeLine />
         </div>
     </div>
 </template>
   
 <script>
-import  AlluvialChart  from "../components/AlluvialChart.vue";  // Import the AlluvialChart component
+import LineChart from '../components/LineChart.vue';
+import RadarChart from '../components/RadarChart.vue';
+import RidgeLine from '../components/RidgeLine.vue';
 
 export default {
-    name: 'AssignmentTwo',
+    name: 'AssignmentThree',
     components: {
-        AlluvialChart, // Import the AlluvialChart component
+        LineChart,
+        RadarChart,
+        RidgeLine,
     },
     data() {
         return {
             tabs: [
-                { name: 'Alluvial', href: '#', current: true },
+                { name: 'Line Chart', href: '#', current: true },
+                { name: 'Radar Chart', href: '#', current: false },
+                { name: 'Ridge Line', href: '#', current: false },
             ],
-            selectedTab: 'Alluvial',
+            selectedTab: 'Line Chart',
         };
     },
     methods: {
@@ -72,7 +86,7 @@ export default {
                 this.selectedTab = tab.name;
             });
         },
-    },
+    }
 };
 </script>
  
