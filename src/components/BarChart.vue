@@ -247,10 +247,6 @@ export default {
 </script>
 
 <style>
-template{
-
-
-}
 .tooltip {
   opacity: 0;
   background-color: #4f4f4f;
