@@ -2,8 +2,8 @@
   <div class="mx-auto max-w-5xl py-3">
     <p class="mt-4 text-base leading-7 text-indigo-600 sm:text-2xl text-center">Mean Montly Temperature</p>
     <p class="mx-auto mt-6 max-w-2xl text-base leading-8 text-gray-600 text-center">
-      Radar chart visualizing USA states monthly temperature means for the desired years, with hover information for max,
-      min, and mean temperatures.
+      Radar chart visualizing USA states monthly temperature means for the desired years, with hover information for Year,
+      Month, and mean temperatures.
     </p>
   </div>
   <div class="flex">
