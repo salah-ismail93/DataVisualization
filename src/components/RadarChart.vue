@@ -305,9 +305,8 @@ export default {
             let dict = {}
             temp_year.forEach(function (d) {
               dict[d.month] = d.mean;
-              console.log(d.month, d.mean);
             });
-            console.log(dict);
+            //console.log(dict);
             let color = colors[i];
             let coordinates = getPathCoordinates(dict);
             //draw the path element
