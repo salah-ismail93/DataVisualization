@@ -7,10 +7,8 @@
       <div class="bg-white px-6 lg:px-8 text-center">
         <div class="mx-auto max-w-5xl">
           <p class="mx-auto mt-6 max-w-2xl text-base leading-8 text-gray-600 text-center">
-            The relationship between states , cities and the
-                tree species by the top 10 trees
+            Temperature data and visualizations for USA states, including the display of minimum, maximum, and mean temperatures for selected years.
           </p>
-          <p class="mt-4 text-base leading-7 text-indigo-600 sm:text-2xl">Abundance of Trees</p>
         </div>
       </div>
     </div>

@@ -1,4 +1,10 @@
 <template>
+  <div class="mx-auto max-w-5xl py-3">
+    <p class="mt-4 text-base leading-7 text-indigo-600 sm:text-2xl text-center">Mean Montly Temperature</p>
+    <p class="mx-auto mt-6 max-w-2xl text-base leading-8 text-gray-600 text-center">
+      A line chart showcasing monthly temperature trends over past specific years, and a temperature chart specific to selected USA state.
+    </p>
+  </div>
   <div class="line-chart">
     <div id="selector-container" style="clear: left; display: flex; align-items: center; margin-left: 10px;">
       <div id="dataset-selector">
