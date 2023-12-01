@@ -9,7 +9,7 @@
     <div id="selector-container" style="clear: left; display: flex; align-items: center; margin-left: 10px;">
       <div id="dataset-selector">
         <label for="dataset-dropdown" style="margin-left: 10px;">Select Dataset:</label>
-        <select v-model="selectedDataset" class="selectpicker" id="dataset-dropdown" data-style="btn-primary"
+        <select v-model="selectedDataset" class="selectpicker" id="dataset-dropdown" @change="updateTitle" data-style="btn-primary"
           data-live-search="true">
           <option v-for="option in datasetOptions" :key="option" :value="option">{{ option }}</option>
         </select>
@@ -47,25 +47,19 @@ export default {
   name: 'LineChart',
   data() {
     return {
-      years: [
-        "2010", "2011", "2012", "2013", "2014", "2015",
-        "2016", "2017", "2018", "2019", "2020", "2021",
-        "2022", "2023"
-      ],
-      datasetOptions: [
-        "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware",
-        "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky",
-        "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi",
-        "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico",
-        "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania",
-        "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont",
-        "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"
-      ],
-      selectedYears: [2010], // To store the selected years
+      years: [],
+      datasetOptions: [],
+      selectedYears: ['1895'], // To store the selected years
       selectedDataset: "Alabama", // To store the selected dataset
+      selectState: null,
+      stateName: null
     };
   },
   methods: {
+    updateTitle() {
+      this.selectState = document.getElementById("dataset-dropdown");
+      this.stateName = this.selectState.options[this.selectState.selectedIndex].innerHTML;
+    },
     handleCheckboxChange() {
       // Access the selected years using this.selectedYears
       // You can perform filtering or other actions here
@@ -202,7 +196,7 @@ export default {
     }
 
     // Function to update the line chart
-    function updateLineChart(selectedDataset, selectedYears) {
+    let updateLineChart = (selectedDataset, selectedYears) => {
       svg = d3.select("#linechart_1").append("svg")
         .attr("id", "linechart_svg")
         .attr("width", width + margin.left + margin.right)
@@ -211,7 +205,9 @@ export default {
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
       // Read the data
-      d3.csv("/all_data.csv").then(function (data) {
+      d3.csv("/all_data.csv").then((data) => {
+        this.datasetOptions = [...new Set(data.map((d) => d.state))];
+        this.years = [...new Set(data.map((d) => d.year))];
         if (selectedDataset && selectedYears) {
           data = data.filter(item => {
             // Specify the desired years and state
@@ -269,17 +265,13 @@ export default {
           .text("Temperatures in Fahrenheit");
 
         // Append a title to the SVG
-        let selectState = document.getElementById("dataset-dropdown");
-        let stateName = selectState.options[selectState.selectedIndex].innerHTML;
-
-        // Append a title to the SVG
         svg.append("text")
           .attr("x", width / 2)
           .attr("y", 0 - margin.top / 2)
           .attr("text-anchor", "middle")
           .style("font-size", "20px")
           .style("text-decoration", "underline")
-          .text(`Temperature Line chart for ${stateName} in ${selectedYears.join(', ')}`);
+          .text(`Temperature Line chart for ${this.stateName || 'Alabama'} in ${selectedYears.join(', ')}`);
 
         // Iterate through selected years
         selectedYears.forEach(function (selectedYear) {
@@ -302,7 +294,7 @@ export default {
     }
 
     // Initial chart creation with the default dataset
-    updateLineChart('Alabama', ['2010']);
+    updateLineChart('Alabama', ['1895']);
 
     // Listen for changes in the dropdown selection
     document.getElementById("dataset-dropdown").addEventListener("change", function () {
