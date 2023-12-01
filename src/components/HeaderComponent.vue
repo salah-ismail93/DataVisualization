@@ -5,7 +5,12 @@
           <div>
           <img src="../assets/logo1.png" class="logo">
         </div>
-          <router-link to="/"><p class="names">Husam Jenidi and Salah Ismail</p></router-link>
+        <div class="names">
+          <router-link to="/">
+            <p>Husam Jenidi</p>
+            <p>Salah Ismail</p>
+          </router-link>
+        </div>
         </div>
         <div class="flex lg:hidden">
           <button type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700" @click="mobileMenuOpen = true">
