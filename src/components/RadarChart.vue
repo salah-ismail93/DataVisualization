@@ -6,33 +6,40 @@
       Month, and mean temperatures.
     </p>
   </div>
-  <div class="flex">
-    <div id="state-selector">
-      <label for="state-dropdown" style="margin-left: 10px;">Select State:</label>
-      <select v-model="selectedState" class="selectpicker" id="state-dropdown" data-style="btn-primary"
-        data-live-search="true">
-        <option v-for="option in stateOptions" :key="option" :value="option">{{ option }}</option>
-      </select>
-    </div>
-    <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" id="year-dropdown-radar" data-toggle="dropdown"
-          aria-haspopup="true" aria-expanded="false" style="margin-left: 8px;">
-          Select Year
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="max-height: 250px; overflow-y: auto;">
-          <form id="year-checkbox-form-radar" style="padding: 5px;">
-            <div v-for="year in yearsOptions" :key="year">
-              <div class="form-check-radar">
-                <input class="form-check-radar-input" type="checkbox" :value="year" :id="'Radarcheck' + year"
-                  v-model="selectedYears" />
-                <label :for="'Radarcheck' + year" class="form-check-radar-label">{{ year }}</label>
-              </div>
-            </div>
-          </form>
-        </div>
+  <div class="flex items-center justify-center">
+    <div class="filtering mb-12">
+      <div id="state-selector">
+        <label for="state-dropdown" style="margin-left: 10px;">Select State:</label>
+        <select v-model="selectedState" class="selectpicker" id="state-dropdown" data-style="btn-primary"
+          data-live-search="true">
+          <option v-for="option in stateOptions" :key="option" :value="option">{{ option }}</option>
+        </select>
       </div>
-    <div class="flex justify-center py-3" id="A3chart2">
-      <div class="tooltip A3chart2Inner"></div>
+      <div class="dropdown">
+          <button class="btn btn-primary dropdown-toggle" type="button" id="year-dropdown-radar" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false" style="margin-left: 8px;">
+            Select Year
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="max-height: 250px; overflow-y: auto;">
+            <form id="year-checkbox-form-radar" style="padding: 5px;">
+              <div v-for="year in yearsOptions" :key="year">
+                <div class="form-check-radar">
+                  <input class="form-check-radar-input" type="checkbox" :value="year" :id="'Radarcheck' + year"
+                    v-model="selectedYears" />
+                  <label :for="'Radarcheck' + year" class="form-check-radar-label">{{ year }}</label>
+                </div>
+              </div>
+            </form>
+          </div>
+      </div>
+    </div>
+    <div class="loading-chart">
+      <div v-if="!isLoading" class="flex justify-center py-3" id="A3chart2">
+        <div class="tooltip A3chart2Inner"></div>
+      </div>
+      <div v-if="isLoading">
+        <div class="border-t-transparent border-solid animate-spin rounded-full border-blue-400 border-8 h-32 w-32"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -48,6 +55,7 @@ export default {
       stateOptions: [],
       selectedState: 'Alabama',
       selectedYears: ['1895'],
+      isLoading: true,
     };
   },
   // Add your component logic here
@@ -361,6 +369,8 @@ export default {
         }).catch((err) => {
           console.error(err);
         });
+        // Toggle loading state when the chart is fully rendered
+        this.isLoading = false;
     },
   },
 };

@@ -5,7 +5,7 @@
       A line chart showcasing monthly temperature trends over past specific years, and a temperature chart specific to selected USA state.
     </p>
   </div>
-  <div class="line-chart">
+  <div class="line-chart flex items-center justify-center">
     <div id="selector-container" style="clear: left; display: flex; align-items: center; margin-left: 10px;">
       <div id="dataset-selector">
         <label for="dataset-dropdown" style="margin-left: 10px;">Select Dataset:</label>
@@ -34,8 +34,12 @@
       </div>
     </div>
     <br>
-
-    <div id="linechart_1">
+  </div>
+  <div class="flex items-center justify-center">
+    <div v-if="!isLoading" id="linechart_1">
+    </div>
+    <div v-if="isLoading">
+      <div class="border-t-transparent border-solid animate-spin rounded-full border-blue-400 border-8 h-32 w-32"></div>
     </div>
   </div>
 </template>
@@ -52,7 +56,8 @@ export default {
       selectedYears: ['1895'], // To store the selected years
       selectedDataset: "Alabama", // To store the selected dataset
       selectState: null,
-      stateName: null
+      stateName: null,
+      isLoading: true,
     };
   },
   methods: {
@@ -274,7 +279,7 @@ export default {
           .text(`Temperature Line chart for ${this.stateName || 'Alabama'} in ${selectedYears.join(', ')}`);
 
         // Iterate through selected years
-        selectedYears.forEach(function (selectedYear) {
+        selectedYears.forEach((selectedYear) => {
           let yearDataAvg = dataAvg.filter(function (d) { return +d.year === +selectedYear && d.type === 'avg'; });
           let yearDataMax = dataMax.filter(function (d) { return +d.year === +selectedYear && d.type === 'max'; });
           let yearDataMin = dataMin.filter(function (d) { return +d.year === +selectedYear && d.type === 'min'; });
@@ -288,6 +293,8 @@ export default {
           drawLinesAndCircles("Avg", yearDataAvg, selectedYear, colorForAvg, colorForMin, minTemperature, maxTemperature);
           drawLinesAndCircles("Max", yearDataMax, selectedYear, colorForMax, colorForMin, minTemperature, maxTemperature);
           drawLinesAndCircles("Min", yearDataMin, selectedYear, colorForMin, colorForMax, minTemperature, maxTemperature);
+          // Toggle loading state when the chart is fully rendered
+          this.isLoading = false;
         });
 
       });
