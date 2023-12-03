@@ -100,7 +100,7 @@ export default {
     let svg;
 
     // Create a tooltip
-    const tooltip = d3.select("#linechart_1")
+    let tooltip = d3.select("#linechart_1")
       .append("section")
       .attr("id", "linechart_tooltip")
       .style("opacity", 0)
@@ -203,6 +203,13 @@ export default {
     // Function to update the line chart
     let updateLineChart = (selectedDataset, selectedYears) => {
       if (selectedDataset && selectedYears.length > 0) {
+        tooltip = d3.select("#linechart_1")
+          .append("section")
+          .attr("id", "linechart_tooltip")
+          .style("opacity", 0)
+          .style("background-color", "lightgray")
+          .style("border", "2px solid black")
+          .attr("class", "tooltip");
         svg = d3.select("#linechart_1").append("svg")
           .attr("id", "linechart_svg")
           .attr("width", width + margin.left + margin.right)
