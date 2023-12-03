@@ -34,10 +34,10 @@
       </div>
     </div>
     <div class="loading-chart">
-      <div v-if="!isLoading" class="flex justify-center py-3" id="A3chart2">
+      <div v-if="!isLoading2" class="flex justify-center py-3" id="A3chart2">
         <div class="tooltip A3chart2Inner"></div>
       </div>
-      <div v-if="isLoading">
+      <div v-if="isLoading2">
         <div class="border-t-transparent border-solid animate-spin rounded-full border-blue-400 border-8 h-32 w-32"></div>
       </div>
     </div>
@@ -55,7 +55,7 @@ export default {
       stateOptions: [],
       selectedState: 'Alabama',
       selectedYears: ['1895'],
-      isLoading: true,
+      isLoading2: true,
     };
   },
   // Add your component logic here
@@ -370,7 +370,7 @@ export default {
           console.error(err);
         });
         // Toggle loading state when the chart is fully rendered
-        this.isLoading = false;
+        this.isLoading2 = false;
     },
   },
 };
