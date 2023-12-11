@@ -288,7 +288,7 @@ export default {
             .text(`Temperature Line chart for ${this.stateName || 'Alabama'} in ${selectedYears.join(', ')}`);
 
           // Iterate through selected years
-          selectedYears.forEach((selectedYear) => {
+          selectedYears.forEach((selectedYear, j) => {
             let yearDataAvg = dataAvg.filter(function (d) { return +d.year === +selectedYear && d.type === 'avg'; });
             let yearDataMax = dataMax.filter(function (d) { return +d.year === +selectedYear && d.type === 'max'; });
             let yearDataMin = dataMin.filter(function (d) { return +d.year === +selectedYear && d.type === 'min'; });
@@ -302,6 +302,25 @@ export default {
             drawLinesAndCircles("Avg", yearDataAvg, selectedYear, colorForAvg, colorForMin, minTemperature, maxTemperature, "only_circles");
             drawLinesAndCircles("Max", yearDataMax, selectedYear, colorForMax, colorForMin, minTemperature, maxTemperature, "both");
             drawLinesAndCircles("Min", yearDataMin, selectedYear, colorForMin, colorForMax, minTemperature, maxTemperature, "both");
+            var linechart_legend = svg.append("g")
+              .attr("class", "legend")
+              .attr("transform", "translate(20,20)");
+
+            linechart_legend.append("rect")
+              .attr("class", `legend-rect-${selectedYear}`)
+              .attr("x", width - 30)
+              .attr("y", j * 20)
+              .attr("width", 10)
+              .attr("height", 10)
+              .attr("fill", color)
+              .style("cursor", "pointer");
+
+            linechart_legend.append("text")
+              .attr("x", width - 15)
+              .attr("y", j * 20 + 9)
+              .attr("class", "legend-text-" + selectedYear)
+              .text(selectedYear) // Display the key associated with the color
+              .style("font-size", "12px");
             // Toggle loading state when the chart is fully rendered
             this.isLoading = false;
           });
