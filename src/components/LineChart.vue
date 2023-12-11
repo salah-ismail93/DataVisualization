@@ -8,7 +8,7 @@
   <div class="line-chart flex items-center justify-center">
     <div id="selector-container" style="clear: left; display: flex; align-items: center; margin-left: 10px;">
       <div id="dataset-selector">
-        <label for="dataset-dropdown" style="margin-left: 10px;">Select Dataset:</label>
+        <label for="dataset-dropdown" style="margin-left: 10px;">Select State:</label>
         <select v-model="selectedDataset" class="selectpicker" id="dataset-dropdown" @change="updateTitle" data-style="btn-primary"
           data-live-search="true">
           <option v-for="option in datasetOptions" :key="option" :value="option">{{ option }}</option>
