@@ -323,6 +323,7 @@ export default {
 
       d3.select("#linechart_svg").remove();
       updateLineChart(selectedDataset, selectedYears);
+      scrollToDiv();
     });
 
     // Add an event listener for changes in the year dropdown
@@ -339,7 +340,18 @@ export default {
 
       d3.select("#linechart_svg").remove();
       updateLineChart(selectedDataset, selectedYears);
+      scrollToDiv();
     });
+
+    function scrollToDiv() {
+      // Access the target div using its id
+      const targetDiv = document.getElementById('linechart_1');
+
+      if (targetDiv) {
+        // Scroll to the target div
+        targetDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
   }
 
 }

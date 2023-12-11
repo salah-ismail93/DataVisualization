@@ -75,6 +75,7 @@ export default {
       const selectedYears = Array.from(checkedCheckboxes).map(checkbox => checkbox.value);
 
       this.drawRadarChart(selectedState, selectedYears);
+      this.scrollToDiv();
     });
     // Add an event listener for changes in the year dropdown
     document.getElementById("year-checkbox-form-radar").addEventListener("change", () => {
@@ -92,6 +93,7 @@ export default {
         let svgA3T2 = d3.select("#A3chart2")
         svgA3T2.selectAll('svg').remove();
         this.drawRadarChart(selectedState, selectedYears);
+        this.scrollToDiv();
       }
     });
   },
@@ -376,6 +378,15 @@ export default {
           this.isLoading2 = false;
       }
     },
+    scrollToDiv() {
+      // Access the target div using its id
+      const targetDiv = document.getElementById('A3chart2');
+
+      if (targetDiv) {
+        // Scroll to the target div
+        targetDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
   },
 };
 </script>
