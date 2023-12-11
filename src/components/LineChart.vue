@@ -2,15 +2,16 @@
   <div class="mx-auto max-w-5xl py-3">
     <p class="mt-4 text-base leading-7 text-indigo-600 sm:text-2xl text-center">Mean Montly Temperature</p>
     <p class="mx-auto mt-6 max-w-2xl text-base leading-8 text-gray-600 text-center">
-      A line chart showcasing monthly temperature trends over past specific years, and a temperature chart specific to selected USA state.
+      A line chart showcasing monthly temperature trends over past specific years, and a temperature chart specific to
+      selected USA state.
     </p>
   </div>
   <div class="line-chart flex items-center justify-center">
     <div id="selector-container" style="clear: left; display: flex; align-items: center; margin-left: 10px;">
       <div id="dataset-selector">
         <label for="dataset-dropdown" style="margin-left: 10px;">Select State:</label>
-        <select v-model="selectedDataset" class="selectpicker" id="dataset-dropdown" @change="updateTitle" data-style="btn-primary"
-          data-live-search="true">
+        <select v-model="selectedDataset" class="selectpicker" id="dataset-dropdown" @change="updateTitle"
+          data-style="btn-primary" data-live-search="true">
           <option v-for="option in datasetOptions" :key="option" :value="option">{{ option }}</option>
         </select>
       </div>
@@ -109,7 +110,7 @@ export default {
       .attr("class", "tooltip");
 
 
-    function drawLinesAndCircles(position, data, year, colorForMax, colorForMin, minTemperature, maxTemperature) {
+    function drawLinesAndCircles(position, data, year, colorForMax, colorForMin, minTemperature, maxTemperature, type) {
       const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
       const x = d3.scaleBand()
@@ -121,24 +122,25 @@ export default {
         .domain([minTemperature, maxTemperature])
         .range([height, 0]);
 
+      if (type == "both") {
+        let line = d3.line()
+          .defined(function (d) { return !isNaN(d[1]); })
+          .x(function (d) { return x(d[0]); })
+          .y(function (d) { return y(d[1]); });
 
+        let filteredData = months.map(function (month) {
+          return [month, +data[0][month]];
+        }).filter(function (d) {
+          return !isNaN(d[1]);
+        });
+        svg.append("path")
+          .datum(filteredData)
+          .attr("fill", "none")
+          .attr("stroke", colorForMax)
+          .attr("stroke-width", 1.5)
+          .attr("d", line);
+      }
       // Create lines for min and max
-      let line = d3.line()
-        .defined(function (d) { return !isNaN(d[1]); })
-        .x(function (d) { return x(d[0]); })
-        .y(function (d) { return y(d[1]); });
-
-      let filteredData = months.map(function (month) {
-        return [month, +data[0][month]];
-      }).filter(function (d) {
-        return !isNaN(d[1]);
-      });
-      svg.append("path")
-        .datum(filteredData)
-        .attr("fill", "none")
-        .attr("stroke", colorForMax)
-        .attr("stroke-width", 1.5)
-        .attr("d", line);
 
       const color = d3.color(colorForMax);
       const colorForAvg = d3.color(color).darker(1).toString();
@@ -216,7 +218,7 @@ export default {
           .attr("height", height + margin.top + margin.bottom)
           .append("g")
           .attr("transform", `translate(${margin.left},${margin.top})`);
-  
+
         // Read the data
         d3.csv("/all_data.csv").then((data) => {
           this.datasetOptions = [...new Set(data.map((d) => d.state))];
@@ -236,37 +238,37 @@ export default {
           // Extract months
           const allMonths = Object.keys(data[0]).slice(0, 12);
           const months = allMonths.slice(0, allMonths.length);
-  
+
           // Set up scales
           const x = d3.scaleBand()
             .domain(months)
             .range([0, width])
             .padding(1);
-  
+
           let minTemperature = d3.min(data, (d) => {
             return d3.min(months, (month) => {
               return +d[month];
             });
           });
-  
+
           let maxTemperature = d3.max(data, (d) => {
             return d3.max(months, (month) => {
               return +d[month];
             });
           });
-  
+
           const y = d3.scaleLinear()
             .domain([minTemperature, maxTemperature])
             .range([height, 0]);
-  
+
           // Add axes
           svg.append("g")
             .attr("transform", `translate(0,${height})`)
             .call(d3.axisBottom(x));
-  
+
           svg.append("g")
             .call(d3.axisLeft(y));
-  
+
           // Add y-axis label
           svg.append("text")
             .attr("transform", "rotate(-90)")
@@ -275,7 +277,7 @@ export default {
             .attr("dy", "1em")
             .style("text-anchor", "middle")
             .text("Temperatures in Fahrenheit");
-  
+
           // Append a title to the SVG
           svg.append("text")
             .attr("x", width / 2)
@@ -284,26 +286,26 @@ export default {
             .style("font-size", "20px")
             .style("text-decoration", "underline")
             .text(`Temperature Line chart for ${this.stateName || 'Alabama'} in ${selectedYears.join(', ')}`);
-  
+
           // Iterate through selected years
           selectedYears.forEach((selectedYear) => {
             let yearDataAvg = dataAvg.filter(function (d) { return +d.year === +selectedYear && d.type === 'avg'; });
             let yearDataMax = dataMax.filter(function (d) { return +d.year === +selectedYear && d.type === 'max'; });
             let yearDataMin = dataMin.filter(function (d) { return +d.year === +selectedYear && d.type === 'min'; });
-  
+
             // Assume colorForMax is a value representing a color in a scale
             const colorForMax = getColorForYear(selectedYear);
             const color = d3.color(colorForMax);
             const colorForAvg = d3.color(color).darker(1).toString();
             const colorForMin = d3.color(color).darker().toString();
-  
-            drawLinesAndCircles("Avg", yearDataAvg, selectedYear, colorForAvg, colorForMin, minTemperature, maxTemperature);
-            drawLinesAndCircles("Max", yearDataMax, selectedYear, colorForMax, colorForMin, minTemperature, maxTemperature);
-            drawLinesAndCircles("Min", yearDataMin, selectedYear, colorForMin, colorForMax, minTemperature, maxTemperature);
+
+            drawLinesAndCircles("Avg", yearDataAvg, selectedYear, colorForAvg, colorForMin, minTemperature, maxTemperature, "only_circles");
+            drawLinesAndCircles("Max", yearDataMax, selectedYear, colorForMax, colorForMin, minTemperature, maxTemperature, "both");
+            drawLinesAndCircles("Min", yearDataMin, selectedYear, colorForMin, colorForMax, minTemperature, maxTemperature, "both");
             // Toggle loading state when the chart is fully rendered
             this.isLoading = false;
           });
-  
+
         });
       }
     }
