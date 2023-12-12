@@ -157,7 +157,7 @@ export default {
           .attr("class", className)
           .attr("class", "circle-line")
           .attr("id", "circle" + year)
-          .attr("temperatureFahrenheit", function (d) { return data[0][d]; })
+          .attr("temperatureCelsius", function (d) { return data[0][d]; })
           .attr("year", function () { return data[0].year; })
           .attr("cx", function (d) { return x(d); })
           .attr("cy", function (d) { return y(temperatureAccessor(data[0][d])); })
@@ -189,9 +189,9 @@ export default {
         .style("opacity", 1);
 
       // Tooltip content
-      const temperatureFahrenheit = d3.select(this).attr("temperatureFahrenheit") + "°F";
+      const temperatureCelsius  = d3.select(this).attr("temperatureCelsius") + "°C";
       const year = d3.select(this).attr("year");
-      tooltip.html(`Temperature: ${temperatureFahrenheit} in year: ${year}`)
+      tooltip.html(`Temperature: ${temperatureCelsius } in year: ${year}`)
         .style("left", (event.pageX + 10) + "px")
         .style("top", (event.pageY - 20) + "px");
     }
@@ -227,7 +227,7 @@ export default {
           .attr("transform", `translate(${margin.left},${margin.top})`);
 
         // Read the data
-        d3.csv("/all_data.csv").then((data) => {
+        d3.csv("/all_data_c.csv").then((data) => {
           this.datasetOptions = [...new Set(data.map((d) => d.state))];
           this.years = [...new Set(data.map((d) => d.year))];
           if (selectedDataset && selectedYears) {
@@ -254,13 +254,13 @@ export default {
 
           let minTemperature = d3.min(data, (d) => {
             return d3.min(months, (month) => {
-              return +d[month];
+              return +d[month] - 5;
             });
           });
 
           let maxTemperature = d3.max(data, (d) => {
             return d3.max(months, (month) => {
-              return +d[month];
+              return +d[month] + 5;
             });
           });
 
@@ -281,7 +281,7 @@ export default {
               .attr("text-anchor", "end")
               .attr("x", 50)
               .attr("y", -10)
-              .text("Temperature (°F)")
+              .text("Temperature (°C)")
               .style('font-size', '14px');
 
           // Append a title to the SVG
