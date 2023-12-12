@@ -135,11 +135,14 @@ export default {
         });
         svg.append("path")
           .datum(filteredData)
+          .attr("class", "path-line")
+          .attr("id", "path" + year)
           .attr("fill", "none")
           .attr("stroke", colorForMax)
-          .attr("stroke-width", 1.5)
+          .attr("stroke-width", 7)
           .attr("d", line);
       }
+
       // Create lines for min and max
 
       const color = d3.color(colorForMax);
@@ -152,12 +155,16 @@ export default {
           }))
           .enter().append("circle")
           .attr("class", className)
+          .attr("class", "circle-line")
+          .attr("id", "circle" + year)
           .attr("temperatureFahrenheit", function (d) { return data[0][d]; })
           .attr("year", function () { return data[0].year; })
           .attr("cx", function (d) { return x(d); })
           .attr("cy", function (d) { return y(temperatureAccessor(data[0][d])); })
-          .attr("r", 4)
+          .attr("r", 6)
           .style("fill", fill)
+          .attr('stroke', "white")
+          .attr("stroke-width", 2)
           .on("mouseover", handleMouseOver)
           .on("mouseout", handleMouseOut);
       }
@@ -271,21 +278,19 @@ export default {
 
           // Add y-axis label
           svg.append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 0 - margin.left)
-            .attr("x", 0 - height / 2)
-            .attr("dy", "1em")
-            .style("text-anchor", "middle")
-            .text("Temperatures in Fahrenheit");
+              .attr("text-anchor", "end")
+              .attr("x", 50)
+              .attr("y", -10)
+              .text("Temperature (°F)")
+              .style('font-size', '14px');
 
           // Append a title to the SVG
           svg.append("text")
             .attr("x", width / 2)
-            .attr("y", 0 - margin.top / 2)
+            .attr("y", 0 - margin.top / 3)
             .attr("text-anchor", "middle")
             .style("font-size", "20px")
-            .style("text-decoration", "underline")
-            .text(`Temperature Line chart for ${this.stateName || 'Alabama'} in ${selectedYears.join(', ')}`);
+            .text(`Temperatures for ${this.stateName || 'Alabama'} in years (${selectedYears.join(', ')})`);
 
           // Iterate through selected years
           selectedYears.forEach((selectedYear, j) => {
@@ -302,6 +307,25 @@ export default {
             drawLinesAndCircles("Avg", yearDataAvg, selectedYear, colorForAvg, colorForMin, minTemperature, maxTemperature, "only_circles");
             drawLinesAndCircles("Max", yearDataMax, selectedYear, colorForMax, colorForMin, minTemperature, maxTemperature, "both");
             drawLinesAndCircles("Min", yearDataMin, selectedYear, colorForMin, colorForMax, minTemperature, maxTemperature, "both");
+
+            var highlight =  (e, d) => {
+              // reduce opacity of all groups
+              d3.selectAll(".path-line").style("opacity", .01)
+              d3.selectAll(`.circle-line`).style("opacity", .01)
+
+              // expect the one that is hovered
+              console.log(e, d,selectedYear)
+              d3.selectAll(`#circle${selectedYear}`).style("opacity", 1)
+              d3.selectAll(`#path${selectedYear}`).style("opacity", 1)
+            }
+
+            // And when it is not hovered anymore
+            var noHighlight =  (e, d) => {
+              console.log(e, d)
+              d3.selectAll(".path-line").style("opacity", 1)
+              d3.selectAll(`.circle-line`).style("opacity", 1)
+            }
+            
             var linechart_legend = svg.append("g")
               .attr("class", "legend")
               .attr("transform", "translate(20,20)");
@@ -313,14 +337,18 @@ export default {
               .attr("width", 10)
               .attr("height", 10)
               .attr("fill", color)
-              .style("cursor", "pointer");
+              .style("cursor", "pointer")
+              .on("mouseover", highlight)
+              .on("mouseleave", noHighlight);
 
             linechart_legend.append("text")
               .attr("x", width - 15)
               .attr("y", j * 20 + 9)
               .attr("class", "legend-text-" + selectedYear)
               .text(selectedYear) // Display the key associated with the color
-              .style("font-size", "12px");
+              .style("font-size", "12px")
+              .on("mouseover", highlight)
+              .on("mouseleave", noHighlight);
             // Toggle loading state when the chart is fully rendered
             this.isLoading = false;
           });
