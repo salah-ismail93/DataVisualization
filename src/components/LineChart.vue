@@ -110,7 +110,7 @@ export default {
       .attr("class", "tooltip");
 
 
-    function drawLinesAndCircles(position, data, year, colorForMax, colorForMin, minTemperature, maxTemperature, type) {
+    function drawLinesAndCircles(position, data, year, color, minTemperature, maxTemperature, type) {
       const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
       const x = d3.scaleBand()
@@ -138,15 +138,14 @@ export default {
           .attr("class", "path-line")
           .attr("id", "path" + year)
           .attr("fill", "none")
-          .attr("stroke", colorForMax)
+          .attr("stroke", color)
           .attr("stroke-width", 7)
           .attr("d", line);
       }
 
-      // Create lines for min and max
 
-      const color = d3.color(colorForMax);
-      const colorForAvg = d3.color(color).darker(1).toString();
+
+      
       // Create circles for average
       function createCircles(data, className, temperatureAccessor, fill) {
         svg.selectAll("." + className)
@@ -171,13 +170,13 @@ export default {
 
       switch (position) {
         case "Avg":
-          createCircles(data, "circle-avg-" + year, function (d) { return d; }, colorForAvg);
+          createCircles(data, "circle-avg-" + year, function (d) { return d; }, color);
           break;
         case "Max":
-          createCircles(data, "circle-max-" + year, function (d) { return d; }, colorForMax);
+          createCircles(data, "circle-max-" + year, function (d) { return d; }, color);
           break;
         case "Min":
-          createCircles(data, "circle-min-" + year, function (d) { return d; }, colorForMin);
+          createCircles(data, "circle-min-" + year, function (d) { return d; }, color);
           break
       }
     }
@@ -298,15 +297,15 @@ export default {
             let yearDataMax = dataMax.filter(function (d) { return +d.year === +selectedYear && d.type === 'max'; });
             let yearDataMin = dataMin.filter(function (d) { return +d.year === +selectedYear && d.type === 'min'; });
 
-            // Assume colorForMax is a value representing a color in a scale
+            // Assume color is a value representing a color in a scale
             const colorForMax = getColorForYear(selectedYear);
             const color = d3.color(colorForMax);
             const colorForAvg = d3.color(color).darker(1).toString();
             const colorForMin = d3.color(color).darker().toString();
 
-            drawLinesAndCircles("Avg", yearDataAvg, selectedYear, colorForAvg, colorForMin, minTemperature, maxTemperature, "only_circles");
-            drawLinesAndCircles("Max", yearDataMax, selectedYear, colorForMax, colorForMin, minTemperature, maxTemperature, "both");
-            drawLinesAndCircles("Min", yearDataMin, selectedYear, colorForMin, colorForMax, minTemperature, maxTemperature, "both");
+            drawLinesAndCircles("Avg", yearDataAvg, selectedYear, colorForAvg, minTemperature, maxTemperature, "only_circles");
+            drawLinesAndCircles("Max", yearDataMax, selectedYear, colorForMax, minTemperature, maxTemperature, "both");
+            drawLinesAndCircles("Min", yearDataMin, selectedYear, colorForMin, minTemperature, maxTemperature, "both");
 
             var highlight =  (e, d) => {
               // reduce opacity of all groups
@@ -314,14 +313,14 @@ export default {
               d3.selectAll(`.circle-line`).style("opacity", .01)
 
               // expect the one that is hovered
-              console.log(e, d,selectedYear)
+              // console.log(e, d,selectedYear)
               d3.selectAll(`#circle${selectedYear}`).style("opacity", 1)
               d3.selectAll(`#path${selectedYear}`).style("opacity", 1)
             }
 
             // And when it is not hovered anymore
             var noHighlight =  (e, d) => {
-              console.log(e, d)
+              // console.log(e, d)
               d3.selectAll(".path-line").style("opacity", 1)
               d3.selectAll(`.circle-line`).style("opacity", 1)
             }
