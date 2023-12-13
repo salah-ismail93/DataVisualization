@@ -145,7 +145,7 @@ export default {
 
 
 
-      
+
       // Create circles for average
       function createCircles(data, className, temperatureAccessor, fill) {
         svg.selectAll("." + className)
@@ -188,9 +188,9 @@ export default {
         .style("opacity", 1);
 
       // Tooltip content
-      const temperatureCelsius  = d3.select(this).attr("temperatureCelsius") + "°C";
+      const temperatureCelsius = d3.select(this).attr("temperatureCelsius") + "°C";
       const year = d3.select(this).attr("year");
-      tooltip.html(`Temperature: ${temperatureCelsius } in year: ${year}`)
+      tooltip.html(`Temperature: ${temperatureCelsius} in year: ${year}`)
         .style("left", (event.pageX + 10) + "px")
         .style("top", (event.pageY - 20) + "px");
     }
@@ -277,11 +277,11 @@ export default {
 
           // Add y-axis label
           svg.append("text")
-              .attr("text-anchor", "end")
-              .attr("x", 50)
-              .attr("y", -10)
-              .text("Temperature (°C)")
-              .style('font-size', '14px');
+            .attr("text-anchor", "end")
+            .attr("x", 50)
+            .attr("y", -10)
+            .text("Temperature (°C)")
+            .style('font-size', '14px');
 
           // Append a title to the SVG
           svg.append("text")
@@ -298,16 +298,16 @@ export default {
             let yearDataMin = dataMin.filter(function (d) { return +d.year === +selectedYear && d.type === 'min'; });
 
             // Assume color is a value representing a color in a scale
-            const colorForMax = getColorForYear(selectedYear);
-            const color = d3.color(colorForMax);
-            const colorForAvg = d3.color(color).darker(1).toString();
-            const colorForMin = d3.color(color).darker().toString();
+            const color = d3.color(getColorForYear(selectedYear));
+            const colorForAvg = d3.color(color).darker(0.5).toString();
+            const colorForMin = d3.color(color).darker(0.1).toString();
+            const colorForMax = d3.color(color).darker(1).toString();
 
             drawLinesAndCircles("Avg", yearDataAvg, selectedYear, colorForAvg, minTemperature, maxTemperature, "only_circles");
             drawLinesAndCircles("Max", yearDataMax, selectedYear, colorForMax, minTemperature, maxTemperature, "both");
             drawLinesAndCircles("Min", yearDataMin, selectedYear, colorForMin, minTemperature, maxTemperature, "both");
 
-            var highlight =  (e, d) => {
+            var highlight = (e, d) => {
               // reduce opacity of all groups
               d3.selectAll(".path-line").style("opacity", .01)
               d3.selectAll(`.circle-line`).style("opacity", .01)
@@ -319,12 +319,12 @@ export default {
             }
 
             // And when it is not hovered anymore
-            var noHighlight =  (e, d) => {
+            var noHighlight = (e, d) => {
               // console.log(e, d)
               d3.selectAll(".path-line").style("opacity", 1)
               d3.selectAll(`.circle-line`).style("opacity", 1)
             }
-            
+
             var linechart_legend = svg.append("g")
               .attr("class", "legend")
               .attr("transform", "translate(20,20)");
@@ -335,10 +335,54 @@ export default {
               .attr("y", j * 20)
               .attr("width", 10)
               .attr("height", 10)
-              .attr("fill", color)
+              .attr("fill", colorForMax)
               .style("cursor", "pointer")
               .on("mouseover", highlight)
               .on("mouseleave", noHighlight);
+
+            linechart_legend.append("rect")
+              .attr("class", `legend-rect-${selectedYear}`)
+              .attr("x", width - 55)
+              .attr("y", j * 20)
+              .attr("width", 10)
+              .attr("height", 10)
+              .attr("fill", colorForAvg)
+              .style("cursor", "pointer")
+              .on("mouseover", highlight)
+              .on("mouseleave", noHighlight);
+
+
+            linechart_legend.append("rect")
+              .attr("class", `legend-rect-${selectedYear}`)
+              .attr("x", width - 80)
+              .attr("y", j * 20)
+              .attr("width", 10)
+              .attr("height", 10)
+              .attr("fill", colorForMin)
+              .style("cursor", "pointer")
+              .on("mouseover", highlight)
+              .on("mouseleave", noHighlight);
+
+            linechart_legend.append("text")
+              .attr("x", width - 35)
+              .attr("y", -10)
+              .attr("class", "legend-text-" + selectedYear)
+              .text("Max") // Display the key associated with the color
+              .style("font-size", "12px")
+
+            linechart_legend.append("text")
+              .attr("x", width - 60)
+              .attr("y", -10)
+              .attr("class", "legend-text-" + selectedYear)
+              .text("Avg") // Display the key associated with the color
+              .style("font-size", "12px")
+
+            linechart_legend.append("text")
+              .attr("x", width - 85)
+              .attr("y", -10)
+              .attr("class", "legend-text-" + selectedYear)
+              .text("Min") // Display the key associated with the color
+              .style("font-size", "12px")
 
             linechart_legend.append("text")
               .attr("x", width - 15)
