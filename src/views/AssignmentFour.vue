@@ -40,15 +40,15 @@
             </div>
         </div>
         <!-- Your tab content goes here -->
-        <div v-show="selectedTab === 'DotDensityMap'">
+        <div v-show="selectedTab === 'Dot Density Map'">
             <!-- Content for Dot Density Map -->
             <DotDensityMap />
         </div>
-        <div v-show="selectedTab === 'DotDensityMapTop10'">
-            <!-- Content for Dot Density Map Top 10 -->
+        <div v-show="selectedTab === 'Dot Density Map Top 10 trees'">
+            <!-- Content for Dot Density Map Top 10 trees -->
             <DotDensityMapTop10 />
         </div>
-        <div v-show="selectedTab === 'ChoroplethMap'">
+        <div v-show="selectedTab === 'Choropleth Map'">
             <!-- Content for Choropleth Map -->
             <ChoroplethMap />
         </div>
