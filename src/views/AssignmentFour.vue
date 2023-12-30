@@ -61,7 +61,7 @@ import DotDensityMapTop10 from '../components/DotDensityMapTop10.vue';
 import ChoroplethMap from '../components/ChoroplethMap.vue';
 
 export default {
-    name: 'AssignmentThree',
+    name: 'AssignmentFour',
     components: {
         DotDensityMap,
         DotDensityMapTop10,
