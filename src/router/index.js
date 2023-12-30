@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import AssignmentOne from '../views/AssignmentOne.vue'
 import AssignmentTwo from '../views/AssignmentTwo.vue'
 import AssignmentThree from '../views/AssignmentThree.vue'
+import AssignmentFour from '../views/AssignmentFour.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +27,11 @@ const router = createRouter({
       path: '/AssignmentThree',
       name: 'AssignmentThree',
       component: AssignmentThree
+    },
+    {
+      path: '/AssignmentFour',
+      name: 'AssignmentFour',
+      component: AssignmentFour
     }
   ]
 })

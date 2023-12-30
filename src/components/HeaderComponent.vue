@@ -1,6 +1,6 @@
 <template>
     <header class="bg-white">
-      <nav class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
+      <nav class="mx-auto flex items-center justify-between p-6 lg:px-8" aria-label="Global">
         <div class="flex lg:flex-1">
           <div>
           <img src="../assets/logo1.png" class="logo">
@@ -22,6 +22,7 @@
           <router-link class="text-sm font-semibold leading-6 text-gray-900 butt" to="/AssignmentOne">Assignment 1</router-link>
           <router-link class="text-sm font-semibold leading-6 text-gray-900 butt" to="/AssignmentTwo">Assignment 2</router-link>
           <router-link class="text-sm font-semibold leading-6 text-gray-900 butt" to="/AssignmentThree">Assignment 3</router-link>
+          <router-link class="text-sm font-semibold leading-6 text-gray-900 butt" to="/AssignmentFour">Assignment 4</router-link>
         </div>
         <div class="hidden lg:flex lg:gap-x-12 lg:flex-1 lg:justify-end">
             <a href="https://github.com/salah-ismail93/Datavisualization" target="_blank" class="text-sm font-semibold leading-6 text-gray-900 butt1"> Github <span aria-hidden="true">&rarr;</span></a>
@@ -48,6 +49,9 @@
               </div>
               <div class="space-y-2 py-6">
                   <router-link class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 butt" to="/AssignmentThree">Assignment 3</router-link>
+              </div>
+              <div class="space-y-2 py-6">
+                  <router-link class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 butt" to="/AssignmentFour">Assignment 4</router-link>
               </div>
               <div class="py-6">
                   <a href="https://github.com/salah-ismail93/Datavisualization"
