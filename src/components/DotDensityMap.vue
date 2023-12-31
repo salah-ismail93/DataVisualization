@@ -11,14 +11,15 @@
             serving as a practical tool for informed conservation and land management decisions.
         </p>
     </div>
-    <div>
-        <div id="dotmap"></div>
+    <div class="mx-auto max-w-7xl text-center">
+        <div id="chart4Div" class="flex flex-col items-center">
+            <svg id="chart4" width="900" height="500"></svg>
+        </div>
     </div>
 </template>
 
 <script>
 import * as d3 from 'd3';
-import * as topojson from 'topojson';
 
 export default {
     name: 'DotDensityMap',
@@ -33,206 +34,235 @@ export default {
     },
     methods: {
         drawDotDensityMap() {
-            // set the dimensions and margins of the graph
-            var margin = { top: 60, right: 70, bottom: 70, left: 100 },
-                width = 1435 - margin.left - margin.right,
-                height = 700 - margin.top - margin.bottom;
+            var margin = { top: 200, right: 30, bottom: 50, left: 500 };
+            // The svg
+            var svg4 = d3.select("#chart4"),
+                width = +svg4.attr("width") - margin.left - margin.right,
+                height = +svg4.attr("height") - margin.top - margin.bottom;
 
-            let projection = d3.geoAlbersUsa()
-                .scale(width - 20)
-                .translate([width / 2, height / 2]);
+            // Map and projection
 
-            let path = d3.geoPath().projection(projection);
+            let projection4 = d3
+                .geoAlbersUsa()
+                .scale(1000)
+                .translate([width, height]);
 
-            let tooltip = null;
+            // Data and color scale
+            var data4 = new Map();
 
-            let mouseOver = function (event, d) {
-                d3.selectAll(".Circle")
-                    .transition()
-                    .duration(200)
-                    .style("opacity", 0.1)
-                    .style("stroke", "none");
-                d3.select(this)
-                    .transition()
-                    .duration(200)
-                    .style("stroke", "black")
-                    .style("opacity", 0.5)
-                    .style("stroke-width", "0.75px");
-                if (!tooltip) {
-                    tooltip = d3.select("body").append("div")
-                        .attr("class", "tooltip")
-                        .style("opacity", 0);
-                }
-                tooltip.html('<p>' + d.city + ' &rarr; ' + d.count + ' trees</p>')
-                    .style("left", (event.pageX + 15) + "px")
-                    .style("top", (event.pageY - 28) + "px")
-                    .transition().duration(400)
-                    .style("opacity", 1);
-            }
+            var tooltipA3T4 = d3
+                .select("#chart4Div")
+                .append("div")
+                .style("background-color", "white")
+                .style("border", "solid")
+                .style("border-width", "2px")
+                .style("border-radius", "5px")
+                .style("padding", "10px")
+                //.style("min-width", "2px")
+                .style("opacity", 0)
+                .attr("class", "tooltip")
+                .style("font-size", "16px");
 
-            let mouseLeave = function () {
-                d3.selectAll(".Circle")
-                    .transition()
-                    .duration(200)
-                    .style("opacity", 0.5)
-                    .style("stroke", "none");
-                // Hide and remove the tooltip
-                if (tooltip) {
-                    tooltip.transition().duration(300)
-                        .style("opacity", 0)
-                        .remove();
-                    tooltip = null; // Reset tooltip variable
-                }
-            }
-            let mouseOver_states = function (event, d) {
-                d3.select(this)
-                    .transition()
-                    .duration(200)
-                    .style("stroke", d.properties.abundance != 0 ? "green" : "black")
-                    .style("stroke-width", "2px");
-                // Create the tooltip if it doesn't exist
-                if (!tooltip) {
-                    tooltip = d3.select("body").append("div")
-                        .attr("class", "tooltip")
-                        .style("opacity", 0);
-                }
-                tooltip.html(d.properties.name + ' &#40;' + d.properties.postal + '&#41;')
-                    .style("left", (event.pageX + 15) + "px")
-                    .style("top", (event.pageY - 28) + "px")
-                    .transition().duration(400)
-                    .style("opacity", 1);
-            }
-
-            let mouseLeave_states = function () {
-                d3.select(this)
-                    .transition()
-                    .duration(200)
-                    .style("stroke", "black")
-                    .style("stroke-width", "0.75px");
-                if (tooltip) {
-                    tooltip.transition().duration(300)
-                        .style("opacity", 0)
-                        .remove();
-                    tooltip = null; // Reset tooltip variable
-                }
-            }
-
-            let svg = d3.select("#dotmap")
-                .append("svg")
-                .attr("width", width)
-                .attr("height", height)
-                .attr("preserveAspectRatio", "xMinYMin meet")
-                .attr("viewBox", `0 0 ${width} ${height}`);
-            let zoomed = function (event) {
-                world.attr("transform", event.transform);
-                // Update circle positions and sizes on zoom
-                svg.selectAll("circle")
-                    .attr("cx", function (d) {
-                        return event.transform.apply([projection([+d.longitude, +d.latitude])[0], projection([+d.longitude, +d.latitude])[1]])[0];
-                    })
-                    .attr("cy", function (d) {
-                        return event.transform.apply([projection([+d.longitude, +d.latitude])[0], projection([+d.longitude, +d.latitude])[1]])[1];
-                    })
-                    .attr("r", 2);
-            };
-
-            let zoom = d3.zoom()
-                .scaleExtent([1, 8])
-                .on("zoom", zoomed);
-
-            svg.call(zoom);
-
-            let world = svg.append("g");
-
-            let currentZoomState = null;
-
-            let svgBackground = world.append("rect")
-                .attr("class", "background")
-                .attr("width", width)
-                .attr("height", height)
-                .attr("fill", "transparent")
-                .on("click", function () {
-                    if (currentZoomState !== null) {
-                        svg.transition()
-                            .duration(750)
-                            .call(zoom.transform, d3.zoomIdentity);
-                        currentZoomState = null;
-                    }
+            // Load external data and boot
+            Promise.all([
+                d3.json("/geojsonUSA.json"),
+                d3.csv("/dotmap_alternative.csv")
+            ]).then(([topo, data]) => {
+                data.forEach(d => {
+                    data4.set(d.city, +d.count);
                 });
 
-            let zoomIn = function (event, d) {
-                if (currentZoomState === d.id) {
-                    // Reset to initial view
-                    svg.transition()
-                        .duration(750)
-                        .call(
-                            zoom.transform,
-                            d3.zoomIdentity
-                        );
-                    currentZoomState = null; // Reset the currently zoomed state
-                } else {
-                    // Zoom to the clicked state
-                    let bounds = path.bounds(d);
-                    let dx = bounds[1][0] - bounds[0][0];
-                    let dy = bounds[1][1] - bounds[0][1];
-                    let x = (bounds[0][0] + bounds[1][0]) / 2;
-                    let y = (bounds[0][1] + bounds[1][1]) / 2;
-                    let scale = Math.max(1, Math.min(8, 0.9 / Math.max(dx / width, dy / height)));
-                    let translate = [width / 2 - scale * x, height / 2 - scale * y];
+                ready4(null, topo); // Call ready4 with loaded topo data
 
-                    svg.transition()
-                        .duration(750)
-                        .call(
-                            zoom.transform,
-                            d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale)
-                        );
-                    currentZoomState = d.id; // Set the currently zoomed state
-                }
-            };
+                // ... (rest of your code remains mostly the same)
+            }).catch(error => console.error("Error loading data:", error));
 
-            fetch("/choropleth.json")
-                .then(response => response.json())
-                .then(data => {
-                    const data_features = topojson.feature(data, data.objects.states).features;
-
-                    world.selectAll(".states")
-                        .data(data_features)
-                        .enter().append("path")
-                        .attr("data-name", function (d) { return d.properties.name })
-
-                        // add a class and styling
-                        .attr("d", path)
-                        .style("stroke", "black")
-                        .attr("class", "Country")
-                        .attr("id", function (d) { return d.id })
+            function ready4(error, topo) {
+                let mouseOver = function (e, d) {
+                    d3.selectAll(".Country")
+                        .transition()
+                        .duration(200)
+                        .style("opacity", 0.5)
+                        .style("stroke", "transparent");
+                    d3.select(this)
+                        .transition()
+                        .duration(200)
                         .style("opacity", 1)
-                        .style("stroke-width", "0.75px")
-                        .style("fill", "white")
-                        .on("mouseover", mouseOver_states)
-                        .on("mouseleave", mouseLeave_states)
-                        .on("click", zoomIn);
-                })
-                .catch(error => {
-                    console.error("Error fetching the data:", error);
-                });
-            d3.csv("/dotmap_alternative.csv").then(function (data) {
-                svg.selectAll("circle")
-                    .data(data)
+                        .style("stroke", "red");
+
+                    tooltipA3T4.transition().duration(200).style("opacity", 1);
+                    tooltipA3T4
+                        .html(
+                            "<span style='color:grey'>State: </span>" +
+                            d.properties.NAME +
+                            "<br>" +
+                            "<span style='color:grey'>CENSUS AREA: </span>" +
+                            d.total
+                        )
+                        .style("top", event.pageY + "px");
+                };
+                let mouseMove = function (e, d) {
+                    tooltipA3T4
+                        .style("left", event.pageX + 30 + "px")
+                        .style("top", event.pageY + "px");
+                };
+
+                let mouseLeave = function (e, d) {
+                    d3.selectAll(".Country")
+                        .transition()
+                        .duration(200)
+                        .style("opacity", 1)
+                        .style("stroke", "black");
+                    d3.select(this).transition().duration(200).style("stroke", "black");
+
+                    tooltipA3T4.transition().duration(200).style("opacity", 0);
+                };
+
+                let path = d3.geoPath().projection(projection4);
+                let currentZoomState = null;
+                let zoomIn = function (event, d) {
+                    if (currentZoomState === d.id) {
+                        // Reset to initial view
+                        svg4.transition()
+                            .duration(750)
+                            .call(
+                                zoom.transform,
+                                d3.zoomIdentity
+                            );
+                        currentZoomState = null; // Reset the currently zoomed state
+                    } else {
+                        // Zoom to the clicked state
+                        let bounds = path.bounds(d);
+                        let dx = bounds[1][0] - bounds[0][0];
+                        let dy = bounds[1][1] - bounds[0][1];
+                        let x = (bounds[0][0] + bounds[1][0]) / 2;
+                        let y = (bounds[0][1] + bounds[1][1]) / 2;
+                        let scale = Math.max(1, Math.min(8, 0.9 / Math.max(dx / width, dy / height)));
+                        let translate = [width / 2 - scale * x, height / 2 - scale * y];
+
+                        svg4.transition()
+                            .duration(750)
+                            .call(
+                                zoom.transform,
+                                d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale)
+                            );
+                        currentZoomState = d.id; // Set the currently zoomed state
+                    }
+                };
+
+                let mouseDotOver = function (e, d) {
+                    d3.selectAll(".Country")
+                        .transition()
+                        .duration(200)
+                        .style("opacity", 0.5)
+                        .style("stroke", "transparent");
+                    d3.select(this)
+                        .transition()
+                        .duration(200)
+                        .style("opacity", 1)
+                        .style("stroke", "red");
+
+                    tooltipA3T4.transition().duration(200).style("opacity", 1);
+
+                    tooltipA3T4
+                        .html(
+                            "<span style='color:grey'>City: </span>" +
+                            d.city +
+                            "<br>" +
+                            "<span style='color:grey'>Count: </span>" +
+                            d.count
+                        )
+                        .style("top", event.pageY + "px");
+                };
+
+                let mouseDotLeave = function () {
+                    d3.selectAll(".Country")
+                        .transition()
+                        .duration(200)
+                        .style("opacity", 1)
+                        .style("stroke", "black");
+                    d3.select(this).transition().duration(200).style("stroke", "black");
+
+                    tooltipA3T4.transition().duration(200).style("opacity", 0);
+                };
+                // Draw the map
+                let world = svg4
+                    .append("g")
+                    .selectAll("path")
+                    .data(topo.features)
                     .enter()
-                    .append("circle")
-                    .attr("class", "Circle")
-                    .attr("cx", function (d) {
-                        return projection([+d.longitude, +d.latitude])[0];
+                    .append("path")
+                    // draw each country
+                    .attr("d", path)
+                    // set the color of each country
+                    .attr("fill", function (d) {
+                        d.total = d.properties.CENSUSAREA;
+                        return "#ffffff";
                     })
-                    .attr("cy", function (d) {
-                        return projection([+d.longitude, +d.latitude])[1];
+                    .style("stroke", "black")
+                    .attr("class", function (d) {
+                        return "Country";
                     })
-                    .attr("r", 2)
-                    .style("fill", "rgb(34,139,34)")
-                    .style("opacity", 0.5)
+                    .style("opacity", 1)
+                    .on("click", zoomIn)
                     .on("mouseover", mouseOver)
+                    .on("mousemove", mouseMove)
                     .on("mouseleave", mouseLeave);
-            });
+
+                // Define the zoom behavior
+                let zoomed = function (event) {
+                    world.attr("transform", event.transform);
+                    // Update circle positions and sizes on zoom
+                    svg4.selectAll("circle")
+                        .attr("cx", function (d) {
+                            return event.transform.apply([projection4([+d.longitude, +d.latitude])[0], projection4([+d.longitude, +d.latitude])[1]])[0];
+                        })
+                        .attr("cy", function (d) {
+                            return event.transform.apply([projection4([+d.longitude, +d.latitude])[0], projection4([+d.longitude, +d.latitude])[1]])[1];
+                        })
+                        .attr("r", 3);
+                };
+                let zoom = d3.zoom()
+                    .scaleExtent([1, 8])
+                    .on("zoom", zoomed);
+                svg4.call(zoom);
+
+                world.append("rect")
+                    .attr("class", "background")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .attr("fill", "transparent")
+                    .on("click", function () {
+                        if (currentZoomState !== null) {
+                            svg4.transition()
+                                .duration(750)
+                                .call(zoom.transform, d3.zoomIdentity);
+                            currentZoomState = null;
+                        }
+                    });
+
+                d3.csv("/dotmap_alternative.csv").then((data) => {
+                    svg4
+                        .selectAll("dot")
+                        .data(data)
+                        .enter()
+                        .append("circle")
+                        .attr("cx", function (d) {
+                            return projection4([+d.longitude, +d.latitude])[0];
+                        })
+                        .attr("cy", function (d) {
+                            return projection4([+d.longitude, +d.latitude])[1];
+                        })
+                        .attr("r", 3)
+                        .style("fill", "#2b8a3e")
+                        .on("mouseover", mouseDotOver)
+                        .on("mouseleave", mouseDotLeave)
+                        .attr("stroke", "black")
+                        .attr("stroke-width", 0.3)
+                        .attr("fill-opacity", 0.8);
+                });
+            }
+
         }
     }
 }
