@@ -1,7 +1,7 @@
 <template>
     <div class="mx-auto max-w-5xl py-3">
         <p class="mt-4 text-base leading-7 text-indigo-600 sm:text-2xl text-center">Dot Density Map Illustrating the
-            Distribution of Trees Across All States</p>
+            Distribution of Top 10 Trees Across All States</p>
         <p class="mx-auto mt-6 max-w-2xl text-base leading-8 text-gray-600 text-center">
             the dot density map, employing a distinct color for each of the top 10 tree species,
             offers a rich and detailed portrayal of their distribution across U.S. states.
