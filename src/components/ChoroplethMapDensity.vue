@@ -1,17 +1,16 @@
 <template>
     <div class="mx-auto max-w-5xl py-3">
-        <p class="mt-4 text-base leading-7 text-indigo-600 sm:text-2xl text-center">Choropleth Map: Mapping the abundance of Trees Across the USA</p>
+        <p class="mt-4 text-base leading-7 text-indigo-600 sm:text-2xl text-center">Green Canopy Chronicles: Mapping Tree Density Across the USA</p>
         <p class="mx-auto mt-6 max-w-2xl text-base leading-8 text-gray-600 text-center">
-            the choropleth maps effectively illustrate the aggregated concentration of trees in the USA at a state level.
-            The use of white areas highlights states with missing information, maintaining transparency.
-            The hover functionality enhances interactivity, providing users with additional insights into individual states.
-            Overall, this visualization serves as a valuable tool for understanding the spatial patterns and relative abundance of trees
-            across the United States.
+            "Explore the 'Green Canopy Chronicles,' an interactive choropleth map revealing the exact landscape of tree density across
+            the United States. The legend guides your journey through shaded landscapes, while white areas highlight states where tree information is unavailable.
+            Hover over states for instant insights, making this atlas a dynamic tool for understanding the intricate
+            tapestry of America's arboreal richness."
         </p>
     </div>
     <div class="mx-auto max-w-7xl text-center">
-        <div id="chart4Div3" class="flex flex-col items-center">
-            <svg id="chart4_3" width="900" height="500"></svg>
+        <div id="chart4Div4" class="flex flex-col items-center">
+            <svg id="chart4_4" width="900" height="500"></svg>
         </div>
     </div>
 </template>
@@ -20,7 +19,7 @@
 import * as d3 from 'd3';
 
 export default {
-    name: 'ChoroplethMap',
+    name: 'ChoroplethMapDensity',
     data() {
         return {
             // Add your data properties here
@@ -28,13 +27,13 @@ export default {
     },
     // Add your component logic here
     mounted() {
-        this.drawChoroplethMap();
+        this.drawChoroplethMapDensity();
     },
     methods: {
-        drawChoroplethMap() {
+        drawChoroplethMapDensity() {
             var margin = { top: 200, right: 30, bottom: 50, left: 500 };
             // The svg
-            var svg4 = d3.select("#chart4_3"),
+            var svg4 = d3.select("#chart4_4"),
                 width = +svg4.attr("width") - margin.left - margin.right,
                 height = +svg4.attr("height") - margin.top - margin.bottom;
 
@@ -47,13 +46,13 @@ export default {
 
             // Data and color scale
             var data4 = new Map();
-            let colorScale4 = d3
+            let colorScale5 = d3
                 .scaleThreshold()
-                .domain([50000, 100000, 200000, 300000, 500000])
-                .range(d3.schemeGreens[6]);
+                .domain([5, 10, 15, 20, 25, 30])
+                .range(d3.schemeGreens[7]);
 
             var tooltipA3T4 = d3
-                .select("#chart4Div3")
+                .select("#chart4Div4")
                 .append("div")
                 .style("background-color", "white")
                 .style("border", "solid")
@@ -92,14 +91,15 @@ export default {
                         .style("opacity", 1)
                         .style("stroke", "red");
 
+                    let density = ((d.total / d.properties.CENSUSAREA) * 2.58998811).toFixed(3);
                     tooltipA3T4.transition().duration(200).style("opacity", 1);
                     tooltipA3T4
                         .html(
                             "<span style='color:grey'>State: </span>" +
                             d.properties.NAME +
                             "<br>" +
-                            "<span style='color:grey'>Total trees: </span>" +
-                            d.total
+                            "<span style='color:grey'>Total trees density: </span>" +
+                            density
                         )
                         .style("top", event.pageY + "px");
                 };
@@ -200,7 +200,8 @@ export default {
                     .attr("fill", function (d) {
                         let abundance_value = data4.get(d.properties.NAME) || 0;
                         d.total = abundance_value;
-                        let color_value = abundance_value != 0 ? colorScale4(d.total) : "white"
+                        let density = ((abundance_value / d.properties.CENSUSAREA) * 2.58998811).toFixed(3);
+                        let color_value = density != 0 ? colorScale5(density) : "white"
                         return color_value;
                     })
                     .style("stroke", "black")
@@ -251,16 +252,16 @@ export default {
                 const legendY = height / 2  ;
 
                 const x = d3.scaleLinear()
-                    .domain([2.6, 75.1])
+                    .domain([2.6, 25])
                     .rangeRound([600, 860]);
 
                 const legend = svg4.append("g")
-                    .attr("id", "choropleth_legend")
+                    .attr("id", "choropleth_legend_density")
                     .attr("transform", `translate(${legendX}, ${legendY})`);
 
                 const legend_entry = legend.selectAll("g.legend")
-                    .data(colorScale4.range().map(function (d) {
-                        d = colorScale4.invertExtent(d);
+                    .data(colorScale5.range().map(function (d) {
+                        d = colorScale5.invertExtent(d);
                         if (d[0] == null) d[0] = x.domain()[0];
                         if (d[1] == null) d[1] = x.domain()[1];
                         return d;
@@ -279,7 +280,7 @@ export default {
                     .attr("width", ls_w)
                     .attr("height", ls_h)
                     .style("fill", function (d) {
-                        return colorScale4(d[0]);
+                        return colorScale5(d[0]);
                     });
 
                 legend_entry.append("text")
@@ -288,12 +289,12 @@ export default {
                         return height - (i * ls_h) - ls_h - 6;
                     })
                     .text(function (d, i) {
-                        if (i === 0) return "< " + d[1] / 1000 + "k";
-                        if (d[1] < d[0]) return "> " + d[0] / 1000 + "k";
-                        return "from " + d[0] / 1000 + "k to " + d[1] / 1000 + "k";
+                        if (i === 0) return "< " + d[1];
+                        if (d[1] < d[0]) return "> " + d[0];
+                        return "from " + d[0]  + " to " + d[1] ;
                     });
 
-                legend.append("text").attr("x", 15).attr("y", 100).text("Tree abundance");
+                legend.append("text").attr("x", 15).attr("y", 75).text("Tree Density per m2");
             }
 
         }

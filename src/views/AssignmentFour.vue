@@ -52,6 +52,10 @@
             <!-- Content for Choropleth Map -->
             <ChoroplethMap />
         </div>
+        <div v-show="selectedTab === 'Choropleth Map Density'">
+            <!-- Content for Choropleth Map -->
+            <ChoroplethMapDensity />
+        </div>
     </div>
 </template>
   
@@ -59,6 +63,7 @@
 import DotDensityMap from '../components/DotDensityMap.vue';
 import DotDensityMapTop10 from '../components/DotDensityMapTop10.vue';
 import ChoroplethMap from '../components/ChoroplethMap.vue';
+import ChoroplethMapDensity from '../components/ChoroplethMapDensity.vue';
 
 export default {
     name: 'AssignmentFour',
@@ -66,6 +71,7 @@ export default {
         DotDensityMap,
         DotDensityMapTop10,
         ChoroplethMap,
+        ChoroplethMapDensity
     },
     data() {
         return {
@@ -73,6 +79,7 @@ export default {
                 { name: 'Dot Density Map', href: '#', current: true },
                 { name: 'Dot Density Map Top 10 trees', href: '#', current: false },
                 { name: 'Choropleth Map', href: '#', current: false },
+                { name: 'Choropleth Map Density', href: '#', current: false },
             ],
             selectedTab: 'Dot Density Map',
         };
