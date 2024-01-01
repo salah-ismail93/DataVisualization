@@ -96,7 +96,7 @@ export default {
                             "<span style='color:grey'>State: </span>" +
                             d.properties.NAME +
                             "<br>" +
-                            "<span style='color:grey'>CENSUS AREA: </span>" +
+                            "<span style='color:grey'>CENSUS AREA in mi2: </span>" +
                             d.total
                         )
                         .style("top", event.pageY + "px");
