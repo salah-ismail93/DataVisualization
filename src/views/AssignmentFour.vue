@@ -7,7 +7,7 @@
       <div class="bg-white px-6 lg:px-8 text-center">
         <div class="mx-auto max-w-5xl">
           <p class="mx-auto mt-6 max-w-2xl text-base leading-8 text-gray-600 text-center">
-            lorem epsum
+            Map illustrating the Distribution of Trees Across All States
           </p>
         </div>
       </div>
